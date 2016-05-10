@@ -27,3 +27,5 @@ For production run:
 ```
 npm run start
 ```
+
+### REST API
