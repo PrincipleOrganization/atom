@@ -1,0 +1,50 @@
+{
+  "name": "atom",
+  "version": "1.0.0",
+  "description": "REST API app for our IoT platform",
+  "main": "start.js",
+  "private": true,
+  "scripts": {
+    "mkdb": "gulp mkdb",
+    "test": "node start development",
+    "start": "node start production",
+    "mongo": "mongod --config configdb.yaml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrincipleOrganization/atom.git"
+  },
+  "keywords": [
+    "atom",
+    "REST",
+    "IoT",
+    "platform",
+    "local",
+    "serial",
+    "port"
+  ],
+  "author": "Princip",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PrincipleOrganization/atom/issues"
+  },
+  "homepage": "https://github.com/PrincipleOrganization/atom#readme",
+  "dependencies": {
+    "body-parser": "~1.8.1",
+    "cookie-parser": "~1.3.3",
+    "debug": "~2.0.0",
+    "express": "~4.9.0",
+    "jade": "~1.6.0",
+    "johnny-five": "^0.9.49",
+    "mongoose": "^4.4.16",
+    "morgan": "~1.3.0",
+    "read-config": "^2.0.0",
+    "serialport": "git+https://github.com/voodootikigod/node-serialport.git",
+    "serve-favicon": "~2.1.3",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "mkdirp": "^0.5.1"
+  }
+}

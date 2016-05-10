@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+var mongoose = require('mongoose');
+var debug = require('debug')('atom');
+var readConfig = require('read-config');
+var config = readConfig('./config.yaml');
+var configdb = readConfig('./configdb.yaml');
+
+// Initialize database.
+var env = process.argv[2];
+process.vars = {
+  env: env
+};
+
+var base = (env === 'production') ? config.db.base.prod : config.db.base.dev;
+var dbhost = configdb.net.bindIp;
+var dbport = configdb.net.port;
+var connString = `mongodb://${dbhost}:${dbport}/${base}`;
+mongoose.connect(connString);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log(`Connected to DB on ${dbhost}:${dbport}/${base}`);
+
+  var port = (env === 'production') ? config.port.prod : config.port.dev;
+
+  var app = require('./app');
+  app.set('env', env);
+  app.set('port', port);
+
+  var server = app.listen(port, function() {
+    console.log("Local server listeting on port " + port);
+
+    debug('Express server listening on port ' + port);
+  });
+});
