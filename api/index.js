@@ -8,6 +8,7 @@ var responseSender = require('../lib/response-sender');
 
 var OptionsCreator = require('../lib/options-creator');
 var ErrorCreator = require('../lib/error-creator');
+var Weight = require('../lib/models/weight').Weight;
 
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
@@ -16,24 +17,24 @@ router.get('/', function(req, res) {
 
 ///////////////////
 /* API for TESTS */
-router.get('/api/signal/good', function(req, res) {
+router.get('/signal/good', function(req, res) {
   res.send('Good from Local on 4000');
 });
 
-router.get('/api/signal/bed', function(req, res) {
+router.get('/signal/bed', function(req, res) {
   res.send('Bad from Local on 4000');
 });
 
-router.get('/api/signal/normal', function(req, res) {
+router.get('/signal/normal', function(req, res) {
   res.send('Normal from Local on 4000');
 });
 
 
 ///////////////////
-/* API           */
+/* API PORTS     */
 
 // get all ports
-router.get('/api/all', function(req, res) {
+router.get('/all', function(req, res) {
   var onlyOpened = false;
   if (req.query.onlyOpened) {
     onlyOpened = Boolean(req.query.onlyOpened);
@@ -45,8 +46,8 @@ router.get('/api/all', function(req, res) {
 });
 
 // open specific port by name
-router.get('/api/open', function(req, res) {
-  var comName = req.query.name;
+router.get('/open', function(req, res) {
+  var comName = req.query.port;
   var comPortOptions = new OptionsCreator(req.query);
 
   if (comName) {
@@ -64,8 +65,8 @@ router.get('/api/open', function(req, res) {
 });
 
 // close specific port by name
-router.get('/api/close', function(req, res) {
-  var comName = req.query.name;
+router.get('/close', function(req, res) {
+  var comName = req.query.port;
   if (comName) {
     ports.closePortByName(comName, function(port) {
       responseSender.sendResponse(res, true, false, comName);
@@ -77,8 +78,8 @@ router.get('/api/close', function(req, res) {
 });
 
 // execute command on specific com-port
-router.get('/api/cmd', function(req, res) {
-  var comName = req.query.name;
+router.get('/cmd', function(req, res) {
+  var comName = req.query.port;
   var cmd = req.query.cmd;
   if (comName) {
     ports.writeToPort(comName, cmd, function(err) {
@@ -94,5 +95,31 @@ router.get('/api/cmd', function(req, res) {
     responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
   }
 });
+
+
+///////////////////
+/* API WEIGHT    */
+
+router.get('/weight', function(req, res) {
+  var port = req.query.port;
+  var year = req.query.Y;
+  var month = req.query.M;
+  var day = req.query.D;
+  var hour = req.query.h;
+  var minute = req.query.m;
+  var second = req.query.s;
+
+  var date = new Date(year, month -1, day, hour, minute, second, 0);
+
+  Weight.findLast({port: port, date: date}, function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+    else if (data) {
+      res.json(data);
+    }
+  });
+});
+
 
 module.exports = router;

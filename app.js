@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var api = require('./api');
 
 var ports = require('./lib/serial-port');
+var OptionsCreator = require('./lib/options-creator');
 
 var app = express();
 
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', api);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -57,7 +58,8 @@ app.use(function(err, req, res, next) {
 ports.getAllPorts(false, function(error, portsArray) {
   for (var i=0; i < portsArray.length; i++) {
     var currentPort = portsArray[i];
-    ports.openPortByName(currentPort.comName, {}, function(error, comPortIsOpen) {
+    var comPortOptions = new OptionsCreator({});
+    ports.openPortByName(currentPort.comName, comPortOptions, function(error, comPortIsOpen) {
       if (error || !comPortIsOpen) {
         console.log(`Fail to open ${currentPort.comName}.`);
       }
