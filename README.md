@@ -54,7 +54,7 @@ will return only opened ports.
 ```
 
 Params:
-* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial` + number (/dev/tty-usbserial1))
+* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial + number` (/dev/tty-usbserial1))
 * `baudRate` Baud Rate, defaults to 9600. Should be one of: 115200, 57600, 38400, 19200, 9600, 4800, 2400, 1800, 1200, 600, 300, 200, 150, 134, 110, 75, or 50. Custom rates as allowed by hardware is supported. Windows doesn't support custom baud rates.
 * `dataBits` Data Bits, defaults to 8. Must be one of: 8, 7, 6, or 5.
 * `stopBits` Stop Bits, defaults to 1. Must be one of: 1 or 2.
@@ -87,7 +87,7 @@ Example:
 ```
 
 Params:
-* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial` + number (/dev/tty-usbserial1))
+* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial + number` (/dev/tty-usbserial1))
 
 Example:
 
@@ -98,11 +98,11 @@ Example:
 ##### Write to port
 
 ```
-./api/cmd
+/api/cmd
 ```
 
 Params:
-* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial` + number (/dev/tty-usbserial1))
+* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial + number` (/dev/tty-usbserial1))
 * `cmd` specific command
 
 Example:
@@ -118,7 +118,7 @@ Example:
 ```
 
 Params:
-* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial` + number (/dev/tty-usbserial1))
+* `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial + number` (/dev/tty-usbserial1))
 * `Y` (required) year
 * `M` (required) month
 * `D` (required) day

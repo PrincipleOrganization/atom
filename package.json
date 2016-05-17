@@ -8,7 +8,7 @@
     "mkdb": "gulp mkdb",
     "test": "node start development",
     "start": "node start production",
-    "mongo": "mongod --config configdb.yaml"
+    "mongo": "mongod --config ./configdb.yaml"
   },
   "repository": {
     "type": "git",

@@ -82,13 +82,13 @@ router.get('/cmd', function(req, res) {
   var comName = req.query.port;
   var cmd = req.query.cmd;
   if (comName) {
-    ports.writeToPort(comName, cmd, function(err) {
-      if (err) {
-        responseSender.sendResponse(res, new ErrorCreator(6, `Can not write to port ${comName}`), true, comName);
-      }
-      else {
-        responseSender.sendResponse(res, true, false, comName);
-      }
+    ports.writeToPort(comName, cmd, function(o) {
+      // if (o) {
+      //   responseSender.sendResponse(res, new ErrorCreator(6, `Can not write to port ${comName}`), true, comName);
+      // }
+      // else {
+        responseSender.sendResponse(res, o, false, comName);
+      // }
     });
   }
   else {
