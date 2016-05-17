@@ -6,6 +6,8 @@ var readConfig = require('read-config');
 var config = readConfig('./config.yaml');
 var configdb = readConfig('./configdb.yaml');
 
+global._config = config;
+
 // Initialize database.
 var env = process.argv[2];
 process.vars = {

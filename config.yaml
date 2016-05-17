@@ -5,3 +5,9 @@ db:
   base:
     dev: test
     prod: local
+device:
+  serialport:
+    path: /dev/ttyUSB0
+    table: weight
+    vendor: koda
+    model: d400
