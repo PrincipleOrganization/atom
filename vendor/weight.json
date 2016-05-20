@@ -1,9 +1,18 @@
 {
   "koda": {
     "d400": {
+      "strLineCode": "",
       "brkLineCode": 13,
       "waightRequest": "XB",
-      "waightRequestLastByte": 10
+      "waightRequestLastByte": 13
+    }
+  },
+  "metlertoledo": {
+    "8530": {
+      "strLineCode": 2,
+      "brkLineCode": 13,
+      "waightRequest": "2UB",
+      "waightRequestLastByte": 13
     }
   }
 }

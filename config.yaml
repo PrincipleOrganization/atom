@@ -6,7 +6,7 @@ db:
     dev: test
     prod: local
 device:
-  serialport:
+  serialport1:
     path: /dev/ttyUSB0
     table: weight
     vendor: koda

@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var debug = require('debug')('atom');
 var readConfig = require('read-config');
 
-var config = readConfig('./config.yaml');
+var config = readConfig('./config.json');
 var configdb = readConfig('./configdb.yaml');
 
 global._config = config;
