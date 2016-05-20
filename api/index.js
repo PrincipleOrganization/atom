@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 var ports = require('../lib/serial-port');
+var parser = require('../lib/api-parser');
 var responseSender = require('../lib/response-sender');
 
 var OptionsCreator = require('../lib/options-creator');
@@ -80,9 +81,9 @@ router.get('/close', function(req, res) {
 // execute command on specific com-port
 router.get('/cmd', function(req, res) {
   var comName = req.query.port;
-  var cmd = req.query.cmd;
+  var bytes = parser.parseCommand(req.query.cmd);
   if (comName) {
-    ports.writeToPort(comName, cmd, function(o) {
+    ports.writeToPort(comName, bytes, function(o) {
       // if (o) {
       //   responseSender.sendResponse(res, new ErrorCreator(6, `Can not write to port ${comName}`), true, comName);
       // }
@@ -102,21 +103,17 @@ router.get('/cmd', function(req, res) {
 
 router.get('/weight', function(req, res) {
   var port = req.query.port;
-  var year = req.query.Y;
-  var month = req.query.M;
-  var day = req.query.D;
-  var hour = req.query.h;
-  var minute = req.query.m;
-  var second = req.query.s;
+  var date = parser.parseDate(req.query);
+  var reader = (req.query.reader) ? req.query.reader : "";
 
-  var date = new Date(year, month -1, day, hour, minute, second, 0);
-
-  Weight.findLast({port: port, date: date}, function(err, data) {
+  Weight.findLast({port: port, date: date, reader: reader}, function(err, data) {
     if (err) {
-      console.log(err);
+      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, port);
     }
     else if (data) {
-      res.json(data);
+      responseSender.sendResponse(res, data, false, port);
+    } else if (!data) {
+      responseSender.sendResponse(res, 'Empty', false, port);
     }
   });
 });

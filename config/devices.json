@@ -1,0 +1,13 @@
+{
+  "devices": [ {
+    "path": "/dev/ttyUSB0",
+    "table": "weight",
+    "vendor": "koda",
+    "model": "d400"
+  }, {
+    "path": "COM3",
+    "table": "weight",
+    "vendor": "Arduino",
+    "model": "Uno"
+  }]
+}

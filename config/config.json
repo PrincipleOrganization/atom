@@ -1,0 +1,15 @@
+{
+  "port": {
+    "dev": 4000,
+    "prod": 4001
+  },
+  "db": {
+    "base": {
+      "dev": "test",
+      "prod": "local"
+    }
+  },
+  "vendor": {
+    "weight": "vendor/weight"
+  }
+}

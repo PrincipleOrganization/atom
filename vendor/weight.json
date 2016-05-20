@@ -14,5 +14,13 @@
       "waightRequest": "2UB",
       "waightRequestLastByte": 13
     }
+  },
+  "Arduino": {
+    "Uno": {
+      "strLineCode": 2,
+      "brkLineCode": 13,
+      "waightRequest": "2UB",
+      "waightRequestLastByte": 13
+    }
   }
 }

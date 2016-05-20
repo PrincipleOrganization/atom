@@ -3,10 +3,12 @@ var mongoose = require('mongoose');
 var debug = require('debug')('atom');
 var readConfig = require('read-config');
 
-var config = readConfig('./config.json');
-var configdb = readConfig('./configdb.yaml');
+var config = readConfig('./config/config.json');
+var devices = readConfig('./config/devices.json');
+var configdb = readConfig('./config/configdb.yaml');
 
 global._config = config;
+global._config.devices = devices.devices;
 
 // Initialize database.
 var env = process.argv[2];
