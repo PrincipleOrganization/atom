@@ -1,0 +1,15 @@
+/* Plugin for parsing koda d400 income message.
+Version: 1.0.0 */
+
+module.exports.execute = function(configs, message) {
+  var weight = 0;
+  var units = configs.units;
+  var kgIndex = data.indexOf(units);
+  weight = data.substring(0, kgIndex -1);
+  weight = Number(weight);
+
+  return {
+    weight: weight,
+    units: units
+  };
+}

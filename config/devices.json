@@ -3,11 +3,13 @@
     "path": "/dev/ttyUSB0",
     "table": "weight",
     "vendor": "koda",
-    "model": "d400"
+    "model": "d400",
+    "units": "kg"
   }, {
     "path": "COM3",
     "table": "weight",
     "vendor": "Arduino",
-    "model": "Uno"
+    "model": "Uno",
+    "units": "ps"
   }]
 }

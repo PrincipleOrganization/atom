@@ -9,7 +9,12 @@
       "prod": "local"
     }
   },
+  "sockets": {
+    "use": true,
+    "port": 4002
+  },
   "vendor": {
     "weight": "vendor/weight"
-  }
+  },
+  "cleaningInterval": 5184000
 }

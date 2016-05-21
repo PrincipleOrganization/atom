@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var mongoose = require('mongoose');
-var debug = require('debug')('atom');
 var readConfig = require('read-config');
 
 var config = readConfig('./config/config.json');
@@ -34,7 +33,5 @@ db.once('open', function() {
 
   var server = app.listen(port, function() {
     console.log("Local server listeting on port " + port);
-
-    debug('Express server listening on port ' + port);
   });
 });

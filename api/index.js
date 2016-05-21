@@ -82,8 +82,9 @@ router.get('/close', function(req, res) {
 router.get('/cmd', function(req, res) {
   var comName = req.query.port;
   var bytes = parser.parseCommand(req.query.cmd);
+  var addBrkLineCode = (req.query.bl) ? req.query.bl : false;
   if (comName) {
-    ports.writeToPort(comName, bytes, function(o) {
+    ports.writeToPort(comName, bytes, addBrkLineCode, function(o) {
       // if (o) {
       //   responseSender.sendResponse(res, new ErrorCreator(6, `Can not write to port ${comName}`), true, comName);
       // }
@@ -95,6 +96,19 @@ router.get('/cmd', function(req, res) {
   else {
     responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
   }
+});
+
+router.get('/clear', function(req, res) {
+  var comName = (req.query.port) ? req.query.port : null;
+  var date = parser.parseDate(req.query);
+
+  Weight.clear({port: comName, date: date}, function(err) {
+    if (err) {
+      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
+    } else {
+      responseSender.sendResponse(res, true, false, comName);
+    }
+  });
 });
 
 

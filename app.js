@@ -10,6 +10,7 @@ var api = require('./api');
 
 var ports = require('./lib/serial-port');
 var OptionsCreator = require('./lib/options-creator');
+var SocketServer = require('./lib/sockets');
 
 var app = express();
 
@@ -57,27 +58,38 @@ app.use(function(err, req, res, next) {
     });
 });
 
+global.comPorts = [];
+global.SocketServer = new SocketServer();
 
 // Open all ports
 ports.getAllPorts(false, function(error, portsArray) {
+  var openedPorts = [];
   for (var i=0; i < portsArray.length; i++) {
     var currentPort = portsArray[i];
     var comPortOptions = new OptionsCreator({});
-    ports.openPortByName(currentPort.comName, comPortOptions, function(error, comPortIsOpen) {
+    ports.openPortByName(currentPort.comName, comPortOptions, function(error, comPortIsOpen, comPort) {
       if (error || !comPortIsOpen) {
         console.log(`Fail to open ${currentPort.comName}.`);
+      } else {
+        openedPorts.push(comPort);
+        global.SocketServer.startSocket(comPort);
       }
     });
   }
 });
 
-// Initializing all working ports
-global.comPorts = [];
-ports.getAllPorts(true, function(error, portsArray) {
-  for (var i=0; i < portsArray.length; i++) {
-    global.comPorts.push(portsArray[i]);
-  }
-});
 
+// Initializing all working ports
+
+// ports.getAllPorts(true, function(error, portsArray) {
+//   for (var i=0; i < portsArray.length; i++) {
+//     global.comPorts.push(portsArray[i]);
+//   }
+//
+//   // Start sockets
+//   console.log(portsArray);
+//   console.log(global.comPorts);
+//   sockets.startSockets(app, portsArray);
+// });
 
 module.exports = app;
