@@ -11,6 +11,7 @@ var api = require('./api');
 var ports = require('./lib/serial-port');
 var OptionsCreator = require('./lib/options-creator');
 var SocketServer = require('./lib/sockets');
+var commander = require('./lib/commander');
 
 var app = express();
 
@@ -60,6 +61,7 @@ app.use(function(err, req, res, next) {
 
 global.comPorts = [];
 global.SocketServer = new SocketServer();
+commander.initIntervalCommands();
 
 // Open all ports
 ports.getAllPorts(false, function(error, portsArray) {

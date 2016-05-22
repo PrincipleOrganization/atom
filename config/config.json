@@ -16,5 +16,9 @@
   "vendor": {
     "weight": "vendor/weight"
   },
-  "cleaningInterval": 5184000
+  "cleaningInterval": 5184000,
+  "intervalCommands": {
+    "use": true,
+    "interval": 1000
+  }
 }

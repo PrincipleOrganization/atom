@@ -4,7 +4,8 @@
       "strLineCode": "",
       "brkLineCode": 13,
       "waightRequest": "XB",
-      "waightRequestLastByte": 13
+      "waightRequestLastByte": 13,
+      "commonRequestBytes": [  ]
     }
   },
   "metlertoledo": {
@@ -12,7 +13,8 @@
       "strLineCode": 2,
       "brkLineCode": 13,
       "waightRequest": "2UB",
-      "waightRequestLastByte": 13
+      "waightRequestLastByte": 13,
+      "commonRequestBytes": [  ]
     }
   },
   "Arduino": {
@@ -20,7 +22,8 @@
       "strLineCode": 2,
       "brkLineCode": 13,
       "waightRequest": "2UB",
-      "waightRequestLastByte": 13
+      "waightRequestLastByte": 13,
+      "commonRequestBytes": [ 12, 15, 122, 13 ]
     }
   }
 }
