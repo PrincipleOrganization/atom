@@ -5,16 +5,8 @@
       "brkLineCode": 13,
       "waightRequest": "XB",
       "waightRequestLastByte": 13,
-      "commonRequestBytes": [  ]
-    }
-  },
-  "metlertoledo": {
-    "8530": {
-      "strLineCode": 2,
-      "brkLineCode": 13,
-      "waightRequest": "2UB",
-      "waightRequestLastByte": 13,
-      "commonRequestBytes": [  ]
+      "commonRequestBytes": [  ],
+      "setzero": []
     }
   },
   "Arduino": {
@@ -23,7 +15,18 @@
       "brkLineCode": 13,
       "waightRequest": "2UB",
       "waightRequestLastByte": 13,
-      "commonRequestBytes": [ 12, 15, 122, 13 ]
+      "commonRequestBytes": [ 87, 13 ],
+      "setzero": [75, 50, 13]
+    }
+  },
+  "Pulsar": {
+    "92Auto": {
+      "strLineCode": 2,
+      "brkLineCode": 13,
+      "waightRequest": "W",
+      "waightRequestLastByte": 13,
+      "commonRequestBytes": [ 87,13 ],
+      "setzero": [[75, 50, 13], [75, 54, 13]]
     }
   }
 }

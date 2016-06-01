@@ -1,7 +1,7 @@
 storage:
   dbPath: ./db
   journal:
-    enabled: true
+    enabled: false
   directoryPerDB: true
 systemLog:
   destination: file

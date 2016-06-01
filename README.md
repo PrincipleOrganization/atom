@@ -7,7 +7,7 @@ In first time run:
 
 ```
 npm i
-npm run mkdb
+npm run prepare
 ```
 
 Then to start mongoDB run:
@@ -72,7 +72,7 @@ Example:
 
 - open port with default options:
 ```
-/api/open?port=COM3
+/api/open?port=/dev/ttyUSB0
 ```
 
 - open port with specific options:
@@ -119,12 +119,12 @@ Example:
 
 Params:
 * `port` (required) path to port (on Windows - `COM + number` (COM3), on Linux - `/dev/tty-usbserial + number` (/dev/tty-usbserial1))
-* `Y` (required) year
-* `M` (required) month
-* `D` (required) day
-* `h` (required) hour
-* `m` (required) minute
-* `s` (required) second
+* `Y` year
+* `M` month
+* `D` day
+* `h` hour
+* `m` minute
+* `s` second
 
 Example:
 
