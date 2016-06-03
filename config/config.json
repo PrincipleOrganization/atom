@@ -4,6 +4,9 @@
     "prod": 4001
   },
   "db": {
+    "vendor": "rethinkdb",
+    "host": "127.0.0.1",
+    "port": "30000",
     "base": {
       "dev": "test",
       "prod": "local"

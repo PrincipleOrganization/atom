@@ -1,5 +1,7 @@
 node_modules/
 db/
 config/devices.json
+config/mongodb.yaml
+config/rethinkdb.conf
 plugins
 info

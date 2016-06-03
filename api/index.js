@@ -10,7 +10,6 @@ var handlerWeight = require('../lib/handlers/weight');
 
 var OptionsCreator = require('../lib/options-creator');
 var ErrorCreator = require('../lib/error-creator');
-var Weight = require('../lib/models/weight').Weight;
 
 var info = require('../info/info.json');
 var packg = require('../package.json');
@@ -100,19 +99,6 @@ router.get('/cmd', function(req, res) {
   }
 });
 
-router.get('/clear', function(req, res) {
-  var comName = (req.query.port) ? req.query.port : null;
-  var date = parser.parseDate(req.query);
-
-  Weight.clear({port: comName, date: date}, function(err) {
-    if (err) {
-      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
-    } else {
-      responseSender.sendResponse(res, true, false, comName);
-    }
-  });
-});
-
 
 ///////////////////
 /* API WEIGHT    */
@@ -120,22 +106,14 @@ router.get('/clear', function(req, res) {
 router.get('/weight/get', function(req, res) {
   var date        = parser.parseDate(req.query);
   var reader      = (req.query.reader) ? req.query.reader : "";
-  var stableValue = (req.query.stable) ? req.query.stable : true;
+  var stableValue = (req.query.stable) ? (req.query.stable === 'true') : true;
   var stableUse   = (req.query.stable) ? true : false;
 
   // TODO: var simple = (req.query.simple) ? req.query.simple : false;
   var port = (req.query.port) ? req.query.port : ports.randomPort(true);
 
   if (port) {
-    Weight.findLast({
-        port: port,
-        date: date,
-        stable: {
-          use: stableUse,
-          value: stableValue
-        },
-        reader: reader
-      }, function(err, data) {
+    handlerWeight.getLastWeight(port, date, stableUse, stableValue, reader, function(err, data) {
       if (err) {
         responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, port);
       }
@@ -167,5 +145,17 @@ router.get('/weight/setzero', function(req, res) {
   }
 });
 
+router.get('/weight/clear', function(req, res) {
+  var comName = (req.query.port) ? req.query.port : null;
+  var date = parser.parseDate(req.query);
+
+  handlerWeight.clear(comName, date, function(err) {
+    if (err) {
+      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
+    } else {
+      responseSender.sendResponse(res, true, false, comName);
+    }
+  });
+});
 
 module.exports = router;
