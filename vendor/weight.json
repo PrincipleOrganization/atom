@@ -12,7 +12,7 @@
   "Arduino": {
     "Uno": {
       "strLineCode": 2,
-      "brkLineCode": 13,
+      "brkLineCode": 10,
       "waightRequest": "2UB",
       "waightRequestLastByte": 13,
       "commonRequestBytes": [ 87, 13 ],
