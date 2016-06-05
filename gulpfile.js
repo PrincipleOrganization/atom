@@ -11,6 +11,12 @@ gulp.task('prepare', function() {
     }
   });
 
+  mkdirp('./db/r_prod', function (err) {
+    if (err) {
+      console.error(err)
+    }
+  });
+
   mkdirp('./plugins', function (err) {
     if (err) {
       console.error(err)

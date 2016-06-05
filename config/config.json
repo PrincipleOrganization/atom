@@ -10,7 +10,8 @@
     "base": {
       "dev": "test",
       "prod": "local"
-    }
+    },
+    "maxCount": 1000000
   },
   "sockets": {
     "use": true,
