@@ -8,11 +8,10 @@ var parser = require('../lib/api-parser');
 var responseSender = require('../lib/response-sender');
 var handlerWeight = require('../lib/handlers/weight');
 var handlerSensor = require('../lib/handlers/sensor');
+var info = require('../lib/info');
 
 var OptionsCreator = require('../lib/options-creator');
 var ErrorCreator = require('../lib/error-creator');
-
-var info = require('../info/info.json');
 
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
@@ -23,8 +22,15 @@ router.get('/', function(req, res) {
 /* API PORTS     */
 
 router.get('/info', function(req, res) {
-  info.configuration = global.app.config.name;
-  res.json(info);
+  info.getInfoAboutDevice(function(error, info) {
+    if (error) {
+      responseSender.sendResponse(res, error, true, null);
+    } else if (info) {
+      responseSender.sendResponse(res, info, false, null);
+    } else {
+      responseSender.sendResponse(res, "Unknown device", true, null);
+    }
+  });
 });
 
 router.get('/restart', function(req, res) {

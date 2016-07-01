@@ -1,7 +1,7 @@
-node_modules
-db
-config
-plugins
-info
-dist
-_test
+/node_modules
+/db
+/config
+/plugins
+/dist
+/_test
+/TODO

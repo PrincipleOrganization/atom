@@ -1,7 +1,3 @@
-/*
-TODO: download plugins files to ./plugins.
-*/
-
 'use strict';
 
 const gulp = require('gulp');
@@ -45,7 +41,6 @@ gulp.task('prepare', function() {
   showLog = true;
 
   makeDirsInDir('.');
-  generateInfoFile('Test', '.');
   generateDevicesFile('.');
   generateConfigDB();
 
@@ -62,13 +57,8 @@ gulp.task('clean-dist', function() {
 
 gulp.task('clean', ['clean-dist', 'clean-test']);
 
-gulp.task('info', function() {
-  generateInfoFile('Test', '.');
-  return;
-});
-
 gulp.task('store', function() {
-  generateConfigDB();
+  generateConfigDB(null, "Test");
 });
 
 gulp.task('test', ['clean-test'], function() {
@@ -80,9 +70,9 @@ gulp.task('test', ['clean-test'], function() {
   makeDir(dir);
   moveAll(dir);
   makeDirsInDir(dir);
-  generateInfoFile('Test', dir);
   generateMongoDB2File(dir);
   generateRethinkDBFile(dir);
+  generateConfigDB(dir, "Test");
 
   notify("Gulp have builded '_test'.");
 
@@ -99,10 +89,10 @@ gulp.task('build', ['clean-dist'], function() {
   makeDir(dir);
   moveAll(dir);
   makeDirsInDir(dir);
-  generateInfoFile('Pantheon', dir);
   generateMongoDB2File(dir);
   generateRethinkDBFile(dir);
   generateBulidFIle(startDate, dir);
+  generateConfigDB(dir, "Pantheon");
 
   notify("Gulp have builded 'dist'.");
 
@@ -112,27 +102,6 @@ gulp.task('build', ['clean-dist'], function() {
 
 ///////////////////////////////////////////////////////////
 /* FUNCTIONS                                             */
-
-function generateInfoFile(productName, dir) {
-  let info = {
-    product: productName,
-    atom: {
-      version: pkg.version
-    },
-    author: pkg.author,
-    license: pkg.license,
-    bugs: pkg.bugs.url,
-    homepage: pkg.homepage
-  };
-
-  fs.writeFile(dir + '/info/info.json', JSON.stringify(info), function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-      log('Created info.json.');
-    }
-  });
-}
 
 function generateBulidFIle(startDate, dir) {
   let buildInfo = `StartedAt: ${startDate}; FinishedAt: ${new Date()}; Node: ${process.version}; Arch: ${process.arch}; Platform: ${process.platform}; Author: ${process.env.USERNAME}; OS: ${process.env.OS}`;
@@ -191,7 +160,7 @@ function generateRethinkDBFile(dir) {
   });
 }
 
-function generateConfigDB(dir) {
+function generateConfigDB(dir, productName) {
   let path = `${__dirname}\\config\\store.ac`;
   if (dir) {
     path = `${__dirname}\\${dir}\\config\\store.ac`;
@@ -208,9 +177,9 @@ function generateConfigDB(dir) {
       canBeDeleted INTEGER NOT NULL DEFAULT 1
     )`);
 
-    let configs = db.prepare('INSERT OR REPLACE INTO configs (name, params, use, canBeDeleted) VALUES (?, ?, ?, ?)');
-    configs.run('default', JSON.stringify(cnf), true, false);
-    configs.finalize();
+    let _configs = db.prepare('INSERT OR REPLACE INTO configs (name, params, use, canBeDeleted) VALUES (?, ?, ?, ?)');
+    _configs.run('default', JSON.stringify(cnf), true, false);
+    _configs.finalize();
 
     // Devices
     db.run(`CREATE TABLE IF NOT EXISTS devices (
@@ -238,6 +207,38 @@ function generateConfigDB(dir) {
       name TEXT UNIQUE NOT NULL,
       params TEXT NOT NULL
     )`);
+
+    // Info
+    let info = {
+      product: productName,
+      atom: {
+        version: pkg.version
+      },
+      author: pkg.author,
+      license: pkg.license,
+      bugs: pkg.bugs.url,
+      homepage: pkg.homepage
+    };
+
+    db.run(`CREATE TABLE IF NOT EXISTS info (
+      product TEXT UNIQUE NOT NULL,
+      atom_version TEXT NOT NULL,
+      author TEXT NOT NULL,
+      license TEXT NOT NULL,
+      bugs TEXT NOT NULL,
+      homepage TEXT NOT NULL
+    )`);
+
+    let _info = db.prepare('INSERT OR REPLACE INTO info (product, atom_version, author, license, bugs, homepage) VALUES (?, ?, ?, ?, ?, ?)');
+    _info.run(
+      info.product,
+      info.atom.version,
+      info.author,
+      info.license,
+      info.bugs,
+      info.homepage
+    );
+    _info.finalize();
   });
 
   db.close();
