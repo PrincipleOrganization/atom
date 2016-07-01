@@ -1,15 +1,20 @@
 {
   "name": "atom",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "REST API app for our IoT platform",
   "main": "start",
   "private": true,
   "scripts": {
     "prepare": "gulp prepare",
-    "test": "node start development",
-    "start": "node start production",
-    "mongo": "mongod --config ./config/mongodb.yaml",
-    "rethink": "rethink --config-file ./config/rethink.conf"
+    "clean": "gulp clean",
+    "build-test": "gulp test",
+    "build": "gulp build",
+    "dev": "node start development",
+    "prod": "node start production",
+    "mongo-test": "mongod --config ./_test/config/mongodb.yaml",
+    "mongo-dist": "mongod --config ./_dist/config/mongodb.yaml",
+    "rethink-test": "rethink --config-file ./_test/config/rethink.conf",
+    "rethink-dist": "rethink --config-file ./_dist/config/rethink.conf"
   },
   "repository": {
     "type": "git",
@@ -37,20 +42,20 @@
     "express": "~4.9.0",
     "is-ascii": "^1.0.0",
     "jade": "~1.6.0",
-    "johnny-five": "^0.9.49",
-    "moment": "^2.13.0",
     "mongoose": "^4.4.16",
     "morgan": "~1.3.0",
-    "read-config": "^2.0.0",
     "serialport": "3.1.2",
     "serve-favicon": "~2.1.3",
     "socket.io": "^1.4.6",
+    "sqlite3": "^3.1.4",
     "string": "^3.3.1",
     "thinky": "^2.3.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-notify": "^2.2.0",
     "mkdirp": "^0.5.1"
   }
 }

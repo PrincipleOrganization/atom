@@ -7,12 +7,12 @@ var ports = require('../lib/serial-port');
 var parser = require('../lib/api-parser');
 var responseSender = require('../lib/response-sender');
 var handlerWeight = require('../lib/handlers/weight');
+var handlerSensor = require('../lib/handlers/sensor');
 
 var OptionsCreator = require('../lib/options-creator');
 var ErrorCreator = require('../lib/error-creator');
 
 var info = require('../info/info.json');
-var packg = require('../package.json');
 
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
@@ -23,17 +23,17 @@ router.get('/', function(req, res) {
 /* API PORTS     */
 
 router.get('/info', function(req, res) {
-  var information = {
-    product: info.product,
-    atom: {
-      version: packg.version
-    },
-    author: packg.author,
-    license: packg.license,
-    bugs: packg.bugs.url,
-    homepage: packg.homepage
-  };
-  res.json(information);
+  info.configuration = global.app.config.name;
+  res.json(info);
+});
+
+router.get('/restart', function(req, res) {
+  // global.app.stop(function() {
+    // restart
+    global.app.init(function() {
+      global.app.start();
+    });
+  // });
 });
 
 // get all ports
@@ -101,9 +101,9 @@ router.get('/cmd', function(req, res) {
 
 
 ///////////////////
-/* API WEIGHT    */
+/* WEIGHT        */
 
-router.get('/weight/get', function(req, res) {
+router.get('/weight', function(req, res) {
   var date        = parser.parseDate(req.query);
   var reader      = (req.query.reader) ? req.query.reader : "";
   var stableValue = (req.query.stable) ? (req.query.stable === 'true') : true;
@@ -150,6 +150,46 @@ router.get('/weight/clear', function(req, res) {
   var date = parser.parseDate(req.query);
 
   handlerWeight.clear(comName, date, function(err) {
+    if (err) {
+      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
+    } else {
+      responseSender.sendResponse(res, true, false, comName);
+    }
+  });
+});
+
+
+///////////////////
+/* SENSOR        */
+
+router.get('/sensor/get', function(req, res) {
+  var date        = parser.parseDate(req.query);
+  var reader      = (req.query.reader) ? req.query.reader : "";
+
+  // TODO: var simple = (req.query.simple) ? req.query.simple : false;
+  var port = (req.query.port) ? req.query.port : ports.randomPort(true);
+
+  if (port) {
+    handlerSensor.getLastValue(port, date, reader, function(err, data) {
+      if (err) {
+        responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, port);
+      }
+      else if (data) {
+        responseSender.sendResponse(res, data, false, port);
+      } else if (!data) {
+        responseSender.sendResponse(res, 'Empty', false, port);
+      }
+    });
+  } else {
+    responseSender.sendResponse(res, new ErrorCreator(8, `At least one serial port must be opened`), true, port);
+  }
+});
+
+router.get('/weight/clear', function(req, res) {
+  var comName = (req.query.port) ? req.query.port : null;
+  var date = parser.parseDate(req.query);
+
+  handlerSensor.clear(comName, date, function(err) {
     if (err) {
       responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
     } else {

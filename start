@@ -1,30 +1,12 @@
 #!/usr/bin/env node
-var DBDriver = require('./lib/db-driver').DBDriver;
-var readConfig = require('read-config');
+var Application = require('./lib/application');
 
-var config = readConfig('./config/config.json');
-var devices = readConfig('./config/devices.json');
-
-global._config = config;
-global._config.devices = devices.devices;
-
-// Initialize database.
 var env = process.argv[2];
 process.vars = {
   env: env
 };
 
-var dbDriver = new DBDriver(config.db.vendor);
-global.dbDriver = dbDriver;
-
-dbDriver.start(function() {
-  var port = (env === 'production') ? config.port.prod : config.port.dev;
-
-  var app = require('./app');
-  app.set('env', env);
-  app.set('port', port);
-
-  var server = app.listen(port, function() {
-    console.log("Local server listeting on port " + port);
-  });
+global.app = new Application();
+global.app.init(function() {
+  global.app.start();
 });
