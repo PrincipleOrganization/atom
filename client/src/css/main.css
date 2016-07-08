@@ -1,0 +1,40 @@
+/*#tabs {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.nav-tabs {
+  border: 0;
+}
+
+.nav-tabs>li {
+  margin-bottom: -2px !important;
+}
+
+.nav-tabs>li>a, .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+  border: 0;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+  background-color: #f9f6f6 !important;
+}
+
+.tab-content {
+  background-color: #f9f6f6;
+  border-radius: 3px;
+}
+
+.table {
+  background-color: white;
+  margin: 10px;
+  width: calc(100% - 20px);
+  border-radius: 3px;
+}
+
+.table>thead {
+  background-color: #f9f6f6;
+}
+
+.table>tbody>tr:hover {
+  background-color: #f9f6f6;
+}*/

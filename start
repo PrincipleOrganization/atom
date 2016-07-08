@@ -6,7 +6,8 @@ process.vars = {
   env: env
 };
 
-global.app = new Application();
-global.app.init(function() {
-  global.app.start();
+var app = new Application();
+app.init(function() {
+  global.app = app;
+  app.start();
 });

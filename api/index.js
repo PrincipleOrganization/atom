@@ -5,41 +5,48 @@ var router = express.Router();
 
 var ports = require('../lib/serial-port');
 var parser = require('../lib/api-parser');
-var responseSender = require('../lib/response-sender');
 var handlerWeight = require('../lib/handlers/weight');
 var handlerSensor = require('../lib/handlers/sensor');
 var info = require('../lib/info');
+var configurator = require('../lib/configurator');
 
+var Response = require('../lib/response');
 var OptionsCreator = require('../lib/options-creator');
-var ErrorCreator = require('../lib/error-creator');
-
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
-});
+var AtomError = require('../lib/error');
 
 
 //////////////////
-/* API PORTS     */
+/* API          */
 
 router.get('/info', function(req, res) {
   info.getInfoAboutDevice(function(error, info) {
     if (error) {
-      responseSender.sendResponse(res, error, true, null);
+      var response = new Response(error);
+      response.send(res);
     } else if (info) {
-      responseSender.sendResponse(res, info, false, null);
+      var response = new Response(info);
+      response.send(res);
     } else {
-      responseSender.sendResponse(res, "Unknown device", true, null);
+      var response = new Response('Unknown device');
+      response.send(res);
     }
   });
 });
 
 router.get('/restart', function(req, res) {
-  // global.app.stop(function() {
-    // restart
-    global.app.init(function() {
-      global.app.start();
-    });
-  // });
+  var response = new Response(true);
+  response.send(res);
+
+  global.app.restart(function() {
+    console.log('Application was restarted.');
+  });
+});
+
+router.get('/settings/configs', function(req, res) {
+  configurator.getAllConfigurations(function(error, data) {
+    var response = new Response((error) ? error : data);
+    response.send(res);
+  });
 });
 
 // get all ports
@@ -50,7 +57,8 @@ router.get('/all', function(req, res) {
   }
 
   ports.getAllPorts(onlyOpened, function(error, portsArray) {
-    responseSender.sendResponse(res, (error) ? error : portsArray, (error) ? true : false, null);
+    var response = new Response((error) ? error : portsArray);
+    response.send(res);
   });
 });
 
@@ -64,11 +72,13 @@ router.get('/open', function(req, res) {
         console.log(`IVENT: comPort ${comName} is open`);
       }
 
-      responseSender.sendResponse(res, (portIsOpen) ? true : error, (portIsOpen) ? false : true, comName);
+      var response = new Response((portIsOpen) ? true : error);
+      response.send(res);
     });
   }
   else {
-    responseSender.sendResponse(res, new ErrorCreator(1, `Invalid comPort name ${comName}`), true, comName);
+    var response = new Response(new AtomError(1));
+    response.send(res);
   }
 });
 
@@ -77,11 +87,13 @@ router.get('/close', function(req, res) {
   var comName = req.query.port;
   if (comName) {
     ports.closePortByName(comName, function(port) {
-      responseSender.sendResponse(res, true, false, comName);
+      var response = new Response(true);
+      response.send(res);
     });
   }
   else {
-    responseSender.sendResponse(res, new ErrorCreator(4, `Can not close port ${comName}`), true, comName);
+    var response = new Response(new AtomError(4));
+    response.send(res);
   }
 });
 
@@ -96,12 +108,14 @@ router.get('/cmd', function(req, res) {
       //   responseSender.sendResponse(res, new ErrorCreator(6, `Can not write to port ${comName}`), true, comName);
       // }
       // else {
-        responseSender.sendResponse(res, o, false, comName);
+        var response = new Response(o);
+        response.send(res);
       // }
     });
   }
   else {
-    responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
+    var response = new Response(new AtomError(5));
+    response.send(res);
   }
 });
 
@@ -121,16 +135,20 @@ router.get('/weight', function(req, res) {
   if (port) {
     handlerWeight.getLastWeight(port, date, stableUse, stableValue, reader, function(err, data) {
       if (err) {
-        responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, port);
+        var response = new Response(new AtomError(5));
+        response.send(res);
       }
       else if (data) {
-        responseSender.sendResponse(res, data, false, port);
+        var response = new Response(data);
+        response.send(res);
       } else if (!data) {
-        responseSender.sendResponse(res, 'Empty', false, port);
+        var response = new Response('Empty');
+        response.send(res);
       }
     });
   } else {
-    responseSender.sendResponse(res, new ErrorCreator(8, `At least one serial port must be opened`), true, port);
+    var response = new Response(new AtomError(8));
+    response.send(res);
   }
 });
 
@@ -141,13 +159,16 @@ router.get('/weight/setzero', function(req, res) {
   if (port) {
     handlerWeight.setZero(port, function(err) {
       if (err) {
-        responseSender.sendResponse(res, err, true, port);
+        var response = new Response(err);
+        response.send(res);
       } else {
-        responseSender.sendResponse(res, true, false, port);
+        var response = new Response(true);
+        response.send(res);
       }
     });
   } else {
-    responseSender.sendResponse(res, new ErrorCreator(1, `Invalid comPort name ${port}`), true, port);
+    var response = new Response(new AtomError(1));
+    response.send(res);
   }
 });
 
@@ -157,9 +178,11 @@ router.get('/weight/clear', function(req, res) {
 
   handlerWeight.clear(comName, date, function(err) {
     if (err) {
-      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
+      var response = new Response(new AtomError(5, err));
+      response.send(res);
     } else {
-      responseSender.sendResponse(res, true, false, comName);
+      var response = new Response(true);
+      response.send(res);
     }
   });
 });
@@ -168,7 +191,7 @@ router.get('/weight/clear', function(req, res) {
 ///////////////////
 /* SENSOR        */
 
-router.get('/sensor/get', function(req, res) {
+router.get('/sensor', function(req, res) {
   var date        = parser.parseDate(req.query);
   var reader      = (req.query.reader) ? req.query.reader : "";
 
@@ -178,16 +201,20 @@ router.get('/sensor/get', function(req, res) {
   if (port) {
     handlerSensor.getLastValue(port, date, reader, function(err, data) {
       if (err) {
-        responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, port);
+        var response = new Response(new AtomError(5, err));
+        response.send(res);
       }
       else if (data) {
-        responseSender.sendResponse(res, data, false, port);
+        var response = new Response(data);
+        response.send(res);
       } else if (!data) {
-        responseSender.sendResponse(res, 'Empty', false, port);
+        var response = new Response('Empty');
+        response.send(res);
       }
     });
   } else {
-    responseSender.sendResponse(res, new ErrorCreator(8, `At least one serial port must be opened`), true, port);
+    var response = new Response(new AtomError(8));
+    response.send(res);
   }
 });
 
@@ -197,9 +224,11 @@ router.get('/weight/clear', function(req, res) {
 
   handlerSensor.clear(comName, date, function(err) {
     if (err) {
-      responseSender.sendResponse(res, new ErrorCreator(5, `5. Can not execute command on port ${comName}`), true, comName);
+      var response = new Response(new AtomError(5));
+      response.send(res);
     } else {
-      responseSender.sendResponse(res, true, false, comName);
+      var response = new Response(true);
+      response.send(res);
     }
   });
 });

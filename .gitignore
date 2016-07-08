@@ -5,3 +5,5 @@
 /dist
 /_test
 /TODO
+/client/public
+/client/index.html

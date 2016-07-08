@@ -9,6 +9,10 @@ const del = require('del');
 const fs = require('fs');
 const pkg = require('./package.json');
 
+
+// *** SERVER ***//
+
+
 const cnf = {
   "port": {
     "dev": 4000,
@@ -172,13 +176,40 @@ function generateConfigDB(dir, productName) {
     // Configs
     db.run(`CREATE TABLE IF NOT EXISTS configs (
       name TEXT UNIQUE NOT NULL,
-      params TEXT NOT NULL,
+      port_dev TEXT NOT NULL,
+      port_prod TEXT NOT NULL,
+      db_vendor TEXT NOT NULL,
+      db_host TEXT NOT NULL,
+      db_port TEXT NOT NULL,
+      db_base_dev TEXT NOT NULL,
+      db_base_prod TEXT NOT NULL,
+      db_maxcount TEXT NOT NULL,
+      socket_use TEXT NOT NULL,
+      socket_port TEXT NOT NULL,
+      intervalCommands_use TEXT NOT NULL,
+      intervalCommands_interval TEXT NOT NULL,
       use INTEGER NOT NULL DEFAULT 0,
       canBeDeleted INTEGER NOT NULL DEFAULT 1
     )`);
 
-    let _configs = db.prepare('INSERT OR REPLACE INTO configs (name, params, use, canBeDeleted) VALUES (?, ?, ?, ?)');
-    _configs.run('default', JSON.stringify(cnf), true, false);
+    let _configs = db.prepare('INSERT OR REPLACE INTO configs (name, port_dev, port_prod, db_vendor, db_host, db_port, db_base_dev, db_base_prod, db_maxcount, socket_use, socket_port, intervalCommands_use, intervalCommands_interval, use, canBeDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    _configs.run(
+      'default',
+      cnf.port.dev,
+      cnf.port.prod,
+      cnf.db.vendor,
+      cnf.db.host,
+      cnf.db.port,
+      cnf.db.base.dev,
+      cnf.db.base.prod,
+      cnf.db.maxCount,
+      cnf.sockets.use,
+      cnf.sockets.port,
+      cnf.intervalCommands.use,
+      cnf.intervalCommands.interval,
+      true,
+      false
+    );
     _configs.finalize();
 
     // Devices
@@ -294,3 +325,37 @@ function log(msg) {
     console.log(msg);
   }
 }
+
+
+// *** CLIENT ***//
+
+gulp.task('clean', function(){
+  // del('dist');
+  return;
+});
+
+gulp.task('css', function() {
+  return gulp.src('./client/src/css/*.*')
+    .pipe(gulp.dest('./client/public/'));
+});
+
+gulp.task('img', function() {
+  return gulp.src('./client/src/img/*.*')
+    .pipe(gulp.dest('./client/public/img/'));
+});
+
+gulp.task('vendor', function() {
+  return gulp.src('./client/src/vendor/**/*.*')
+    .pipe(gulp.dest('./client/public/vendor/'));
+});
+
+gulp.task('html', function() {
+  return gulp.src('./client/src/html/*.*')
+    .pipe(gulp.dest('./client/'));
+});
+
+gulp.task('watch', function () {
+  return gulp.watch('./client/src/css/**/*.css', ['css']);
+});
+
+gulp.task('client.build', ['html', 'vendor', 'img', 'css']);
