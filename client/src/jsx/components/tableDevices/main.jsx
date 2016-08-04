@@ -1,19 +1,19 @@
 import React from 'react';
 import axios from 'axios';
 
-import TableConfigRecord from './record.jsx';
+import TableDeviceRecord from './record.jsx';
 import TableToolbar from '../tableToolbar/main.jsx';
 import ModalWindow from '../modalDialog/main.jsx';
-import FormConfig from '../formConfig/main.jsx';
+import FormDevice from '../formDevice/main.jsx';
 
-class TableConfigs extends React.Component {
+class TableDevices extends React.Component {
   constructor() {
     super();
 
     this.state = {
       modalIsOpen: false,
       modalTitle: '',
-      modalAction: '',
+      modalAction: 'add',
       recordData: {},
       data: [],
       operationId: 0
@@ -26,11 +26,11 @@ class TableConfigs extends React.Component {
     this.getAllRecords();
   }
 
-  getAllRecords() {
-    axios.get(`${this.href}api/settings/config`)
+  getAllRecords(cb) {
+    axios.get(`${this.href}api/settings/device`)
     .then((response) => {
       const data = response.data.data;
-      this.setState({data: data});
+      this.setState({data});
     });
   }
 
@@ -51,53 +51,48 @@ class TableConfigs extends React.Component {
 
     const newRecord = {
       name: formState.name,
-      port: {
-        prod: formState.port.prod
-      },
-      db: {
-        vendor: formState.db.vendor,
-        host: formState.db.host,
-        port: formState.db.port,
-        base: {
-          prod: formState.db.base.prod
-        },
-        maxCount: formState.db.maxCount,
-      },
-      sockets: {
-        use: (formState.sockets.use) ? ('1') : ('0'),
-        port: formState.sockets.port
-      },
-      intervalCommands: {
-        use: (formState.intervalCommands.use) ? ('1') : ('0'),
-        interval: formState.intervalCommands.interval
-      },
-      use: (formState.use) ? (1) : (0)
+      path: formState.path,
+      tableName: formState.tableName,
+      vendor: formState.vendor,
+      model: formState.model,
+      units: formState.units,
+      baudRate: formState.baudRate,
+      dataBits: formState.dataBits,
+      stopBits: formState.stopBits,
+      parity: formState.parity,
+      rtscts: formState.rtscts,
+      xon: formState.xon,
+      xoff: formState.xoff,
+      xany: formState.xany,
+      flowControl: formState.flowControl,
+      bufferSize: formState.bufferSize,
+      use: formState.use
     };
 
-    axios.post(`${this.href}api/settings/config`, newRecord)
+    axios.post(`${this.href}api/settings/device`, newRecord)
      .then((response) => {
        this.getAllRecords();
        this.toogleModalDialog();
-       this.props.addNotification(`New configuration ${formState.name} was added.`);
+       this.props.addNotification(`New device ${formState.name} was added.`);
      });
   }
 
   handleDeleteModalDialog() {
     const { name, id } = this.refs.form;
 
-    axios.delete(`${this.href}api/settings/config`, {params: {id}})
-      .then((response) => {
-        this.getAllRecords();
-        this.toogleModalDialog();
-        this.props.addNotification(`Configuration ${name} was deleted.`);
-      });
+    axios.delete(`${this.href}api/settings/device`, {params: {id}})
+     .then((response) => {
+       this.getAllRecords();
+       this.toogleModalDialog();
+       this.props.addNotification(`Device ${name} was deleted.`);
+     });
   }
 
   addNewRecord(button) {
     this.setState({
       ...this.state,
       recordData: {},
-      modalTitle: 'New configuration',
+      modalTitle: 'New device',
       modalAction: 'add',
       modalIsOpen: !this.state.modalIsOpen,
       operationId: ++this.state.operationId
@@ -120,28 +115,33 @@ class TableConfigs extends React.Component {
 
     return (
       <div>
-        <TableToolbar table='configs' addNewRecord={this.addNewRecord.bind(this)} />
+        <TableToolbar table='devices' addNewRecord={this.addNewRecord.bind(this)} />
 
         <table class="table table-hover">
           <thead>
             <tr>
               <th>Use</th>
               <th>Name</th>
-              <th>Port</th>
-              <th>DB vendor</th>
-              <th>DB host</th>
-              <th>DB port</th>
-              <th>DB base</th>
-              <th>Max number of records</th>
-              <th>Use sockets</th>
-              <th>Socket's server port</th>
-              <th>Use interval commands</th>
-              <th>Time of interval commands</th>
+              <th>Path</th>
+              <th>Table name</th>
+              <th>Vendor</th>
+              <th>Model</th>
+              <th>Units</th>
+              <th>Baud rate</th>
+              <th>Data bits</th>
+              <th>Stop bits</th>
+              <th>Parity</th>
+              <th>RSTSCTS</th>
+              <th>XON</th>
+              <th>XOFF</th>
+              <th>XANY</th>
+              <th>Flow control</th>
+              <th>Buffer size</th>
             </tr>
           </thead>
           <tbody>
             {this.state.data.map((rec) => {
-              return <TableConfigRecord key={rec.id} data={rec} onClick={this.openRecord.bind(this)} />
+              return <TableDeviceRecord key={rec.id} data={rec} onClick={this.openRecord.bind(this)} />
             })}
           </tbody>
         </table>
@@ -152,13 +152,13 @@ class TableConfigs extends React.Component {
           handleClose={this.handleCloseModalDialog.bind(this)}
           handleSave={this.handleSaveModalDialog.bind(this)}
           handleDelete={this.handleDeleteModalDialog.bind(this)}
-          table='configs'
+          table='devices'
           action={modalAction}>
-          <FormConfig ref='form' recordData={recordData} operationId={operationId} />
+          <FormDevice ref='form' recordData={recordData} operationId={operationId} />
         </ModalWindow>
       </div>
     );
   }
 }
 
-export default TableConfigs;
+export default TableDevices;

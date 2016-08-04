@@ -42,11 +42,106 @@ router.get('/restart', function(req, res) {
   });
 });
 
-router.get('/settings/configs', function(req, res) {
+router.get('/settings/config', function(req, res) {
   configurator.getAllConfigurations(function(error, data) {
     var response = new Response((error) ? error : data);
     response.send(res);
   });
+});
+
+router.post('/settings/config', function(req, res) {
+  if (req.body) {
+    configurator.addNewConfig(req.body, function() {
+      var response = new Response('New config was added');
+      response.send(res);
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.delete('/settings/config', function(req, res) {
+  if (req.query.id) {
+    configurator.deleteConfig(req.query.id, function(err) {
+      if (err) {
+        var response = new Response('Failed to delete config.');
+        response.send(res);
+      } else {
+        var response = new Response('Config was deleted.');
+        response.send(res);
+      }
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.get('/settings/device', function(req, res) {
+  configurator.getAllDevices(function(error, data) {
+    var response = new Response((error) ? error : data);
+    response.send(res);
+  });
+});
+
+router.post('/settings/device', function(req, res) {
+  if (req.body) {
+    configurator.addNewDevice(req.body, function() {
+      var response = new Response('New device was added');
+      response.send(res);
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.delete('/settings/device', function(req, res) {
+  if (req.query.id) {
+    configurator.deleteDevice(req.query.id, function(err) {
+      if (err) {
+        var response = new Response('Failed to delete device.');
+        response.send(res);
+      } else {
+        var response = new Response('Device was deleted.');
+        response.send(res);
+      }
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.get('/settings/plugin', function(req, res) {
+  configurator.getAllPlugins(function(error, data) {
+    var response = new Response((error) ? error : data);
+    response.send(res);
+  });
+});
+
+router.post('/settings/plugin', function(req, res) {
+  if (req.body) {
+    configurator.addNewPlugin(req.body, function() {
+      var response = new Response('New plugin was added');
+      response.send(res);
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.delete('/settings/plugin', function(req, res) {
+  if (req.query.id) {
+    configurator.deletePlugin(req.query.id, function(err) {
+      if (err) {
+        var response = new Response('Failed to delete device.');
+        response.send(res);
+      } else {
+        var response = new Response('Plugin was deleted.');
+        response.send(res);
+      }
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
 });
 
 // get all ports
@@ -234,3 +329,9 @@ router.get('/weight/clear', function(req, res) {
 });
 
 module.exports = router;
+
+
+function sendInvalidIncomData(res) {
+  var response = new Response('Invalid income data');
+  response.send(res);
+}

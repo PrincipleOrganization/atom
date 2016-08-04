@@ -1,40 +1,54 @@
-/*#tabs {
+#tabs {
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.nav-tabs {
-  border: 0;
-}
-
-.nav-tabs>li {
-  margin-bottom: -2px !important;
-}
-
-.nav-tabs>li>a, .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-  border: 0;
-}
-
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-  background-color: #f9f6f6 !important;
+.btn-toolbar {
+  padding: 10px;
 }
 
 .tab-content {
-  background-color: #f9f6f6;
-  border-radius: 3px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-radius: 0 0 5px 5px;
 }
 
 .table {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.table thead {
+  background-color: #f8f8f8;
+}
+
+.navbar {
+  border-color: white;
+}
+
+.navbar-items {
   background-color: white;
-  margin: 10px;
-  width: calc(100% - 20px);
-  border-radius: 3px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.table>thead {
-  background-color: #f9f6f6;
+textarea {
+   resize: none;
 }
 
-.table>tbody>tr:hover {
-  background-color: #f9f6f6;
-}*/
+#btn-restart-server {
+  margin-top: 15px;
+}
+
+.notification-bar {
+  background-color: rgba(42, 42, 42, 0.8) !important;
+}
+
+.notification-bar-wrapper {
+  padding: 10px;
+}
+
+.notification-bar-message {
+  font-size: 14px;
+}

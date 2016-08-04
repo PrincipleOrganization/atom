@@ -1,6 +1,8 @@
 import React from 'react';
 
 import TableConfigs from '../tableConfigs/main.jsx';
+import TableDevices from '../tableDevices/main.jsx';
+import TablePlugins from '../tablePlugins/main.jsx';
 
 class TabContent extends React.Component {
   getDivClass() {
@@ -13,7 +15,20 @@ class TabContent extends React.Component {
   render() {
     let element = "test";
     if (this.props.id == 'configs') {
-      element = <TableConfigs />;
+      element = <TableConfigs
+        addNotification={this.props.addNotification}
+        removeNotification={this.props.removeNotification}
+      />;
+    } else if (this.props.id == 'devices') {
+      element = <TableDevices
+        addNotification={this.props.addNotification}
+        removeNotification={this.props.removeNotification}
+      />;
+    } else if (this.props.id == 'plugins') {
+      element = <TablePlugins
+        addNotification={this.props.addNotification}
+        removeNotification={this.props.removeNotification}
+      />;
     }
 
     return (

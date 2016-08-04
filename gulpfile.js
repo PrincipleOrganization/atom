@@ -3,6 +3,8 @@
 const gulp = require('gulp');
 const notify = require("gulp-notify");
 
+const webpack = require('webpack');
+
 const sqlite3 = require('sqlite3').verbose();
 const mkdirp = require('mkdirp');
 const del = require('del');
@@ -19,7 +21,7 @@ const cnf = {
     "prod": 4001
   },
   "db": {
-    "vendor": "rethinkdb",
+    "vendor": "flow",
     "host": "127.0.0.1",
     "port": "30000",
     "base": {
@@ -65,7 +67,7 @@ gulp.task('store', function() {
   generateConfigDB(null, "Test");
 });
 
-gulp.task('test', ['clean-test'], function() {
+gulp.task('test', ['clean-test', 'client.build'], function() {
   showLog = true;
   production = false;
 
@@ -83,7 +85,7 @@ gulp.task('test', ['clean-test'], function() {
   return;
 });
 
-gulp.task('build', ['clean-dist'], function() {
+gulp.task('build', ['clean-dist', 'client.build'], function() {
   showLog = false;
   production = true;
 
@@ -175,6 +177,7 @@ function generateConfigDB(dir, productName) {
   db.serialize(function() {
     // Configs
     db.run(`CREATE TABLE IF NOT EXISTS configs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT UNIQUE NOT NULL,
       port_dev TEXT NOT NULL,
       port_prod TEXT NOT NULL,
@@ -214,6 +217,7 @@ function generateConfigDB(dir, productName) {
 
     // Devices
     db.run(`CREATE TABLE IF NOT EXISTS devices (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       path TEXT UNIQUE NOT NULL,
       tableName TEXT NOT NULL,
@@ -235,6 +239,7 @@ function generateConfigDB(dir, productName) {
 
     // Plugins
     db.run(`CREATE TABLE IF NOT EXISTS plugins (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT UNIQUE NOT NULL,
       params TEXT NOT NULL
     )`);
@@ -295,13 +300,11 @@ function makeDirsInDir(dir) {
   makeDir(dir + '/plugins');
   makeDir(dir + '/info');
   makeDir(dir + '/config');
+  makeDir(dir + '/client');
 }
 
 function moveAll(dir) {
   gulp.src('./start')
-    .pipe(gulp.dest(dir));
-
-  gulp.src('./app.js')
     .pipe(gulp.dest(dir));
 
   gulp.src('./api/**/*.*')
@@ -316,8 +319,8 @@ function moveAll(dir) {
   gulp.src('./node_modules/**/*.*')
     .pipe(gulp.dest(dir + '/node_modules'));
 
-  gulp.src('./vendor/**/*.*')
-    .pipe(gulp.dest(dir + '/vendor'));
+  gulp.src('.client/**/*')
+    .pipe(gulp.dest(dir + '/client'));
 }
 
 function log(msg) {
@@ -354,8 +357,13 @@ gulp.task('html', function() {
     .pipe(gulp.dest('./client/'));
 });
 
-gulp.task('watch', function () {
-  return gulp.watch('./client/src/css/**/*.css', ['css']);
+gulp.task('js', function() {
+  return webpack(require('./webpack.config.js'));
 });
 
-gulp.task('client.build', ['html', 'vendor', 'img', 'css']);
+gulp.task('watch', function () {
+  gulp.watch('./client/src/css/**/*.css', ['css']);
+  gulp.watch('./client/src/jsx/**/*jsx', ['js']);
+});
+
+gulp.task('client.build', ['html', 'vendor', 'img', 'css', 'js']);

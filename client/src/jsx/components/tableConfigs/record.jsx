@@ -1,11 +1,11 @@
 import React from 'react';
 
-class TableConfigsRecord extends React.Component {
+class TableConfigRecord extends React.Component {
   render() {
-    const data = this.props.data;
+    const { data, onClick } = this.props;
 
     return (
-      <tr>
+      <tr onClick={onClick.bind(null, data)}>
         <td>{data.use}</td>
         <td>{data.name}</td>
         <td>{data.port.prod}</td>
@@ -23,4 +23,4 @@ class TableConfigsRecord extends React.Component {
   }
 }
 
-export default TableConfigsRecord;
+export default TableConfigRecord;

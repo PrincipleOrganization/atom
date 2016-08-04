@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Tab from './tab.jsx';
-import TabContent from './content.jsx'
+import TabContent from './content.jsx';
 
 class Tabs extends React.Component {
   constructor() {
@@ -42,7 +42,13 @@ class Tabs extends React.Component {
         </ul>
         <div class="tab-content clearfix">
           {this.state.content.map((content) => {
-            return <TabContent key={content.id} id={content.id} active={content.active} />
+            return <TabContent
+              key={content.id}
+              id={content.id}
+              active={content.active}
+              addNotification={this.props.addNotification}
+              removeNotification={this.props.removeNotification}
+            />
           })}
         </div>
       </div>
