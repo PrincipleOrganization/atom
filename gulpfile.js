@@ -120,13 +120,13 @@ function generateBulidFIle(startDate, dir) {
 }
 
 function generateMongoDB2File(dir) {
-  var path = `${__dirname}\\${dir}`;
+  var path = `${__dirname}\/${dir}`;
 
-  let confPath = `${path}\\config\\mongodb.conf`;
+  let confPath = `${path}\/config\/mongodb.conf`;
 
-  let dbPath = `${path}\\db\\m_prod`;
+  let dbPath = `${path}\/db\/m_prod`;
   if (production) {
-    dbPath = `$\\home\\.atom\\db\\m_prod`;
+    dbPath = `$\/home\/.atom\/db\/m_prod`;
   }
 
   let conf = 'dbpath = ' +  dbPath
@@ -142,13 +142,13 @@ function generateMongoDB2File(dir) {
 }
 
 function generateRethinkDBFile(dir) {
-  var path = `${__dirname}\\${dir}`;
+  var path = `${__dirname}\/${dir}`;
 
-  let confPath = `${path}\\config\\rethinkdb.conf`;
+  let confPath = `${path}\/config\/rethinkdb.conf`;
 
-  let dbPath = `${path}\\db\\r_prod`;
+  let dbPath = `${path}\/db\/r_prod`;
   if (production) {
-    dbPath = `$\\home\\.atom\\db\\r_prod`;
+    dbPath = `$\/home\/.atom\/db\/r_prod`;
   }
 
   let conf = 'bind=' + cnf.db.host
@@ -165,9 +165,9 @@ function generateRethinkDBFile(dir) {
 }
 
 function generateConfigDB(dir, productName) {
-  let path = `${__dirname}\\config\\store.ac`;
+  let path = `${__dirname}\/config\/store.ac`;
   if (dir) {
-    path = `${__dirname}\\${dir}\\config\\store.ac`;
+    path = `${__dirname}\/${dir}\/config\/store.ac`;
   }
 
   let db = new sqlite3.Database(path);
