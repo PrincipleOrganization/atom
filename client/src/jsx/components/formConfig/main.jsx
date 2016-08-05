@@ -68,12 +68,12 @@ class FormConfig extends React.Component {
   }
 
   handleCheckboxUseOnChange(event) {
-    this.use = !this.state.use;
+    this.use = !this.use;
     this.updateForm();
   }
 
   handlePortOnChange(event) {
-    this.port.port = event.target.value;
+    this.port.prod = event.target.value;
     this.updateForm();
   }
 
