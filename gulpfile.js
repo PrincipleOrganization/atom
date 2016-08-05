@@ -61,13 +61,15 @@ gulp.task('clean-dist', function() {
   return del('dist');
 });
 
-gulp.task('clean', ['clean-dist', 'clean-test']);
+gulp.task('clean', ['clean-dist', 'clean-test'], function() {
+  return null;
+});
 
 gulp.task('store', function() {
   generateConfigDB(null, "Test");
 });
 
-gulp.task('test', ['clean-test', 'client.build'], function() {
+gulp.task('test', ['client.build'], function() {
   showLog = true;
   production = false;
 
@@ -80,12 +82,10 @@ gulp.task('test', ['clean-test', 'client.build'], function() {
   generateRethinkDBFile(dir);
   generateConfigDB(dir, "Test");
 
-  notify("Gulp have builded '_test'.");
-
   return;
 });
 
-gulp.task('build', ['clean-dist', 'client.build'], function() {
+gulp.task('build', ['client.build'], function() {
   showLog = false;
   production = true;
 
@@ -100,9 +100,7 @@ gulp.task('build', ['clean-dist', 'client.build'], function() {
   generateBulidFIle(startDate, dir);
   generateConfigDB(dir, "Pantheon");
 
-  notify("Gulp have builded 'dist'.");
-
-  return;
+  return true;
 });
 
 
@@ -298,7 +296,6 @@ function makeDirsInDir(dir) {
   makeDir(dir +'/db/r_prod');
   makeDir(dir +'/db/m_prod');
   makeDir(dir + '/plugins');
-  makeDir(dir + '/info');
   makeDir(dir + '/config');
   makeDir(dir + '/client');
 }
@@ -319,7 +316,10 @@ function moveAll(dir) {
   gulp.src('./node_modules/**/*.*')
     .pipe(gulp.dest(dir + '/node_modules'));
 
-  gulp.src('.client/**/*')
+  gulp.src('./client/public/**/*')
+    .pipe(gulp.dest(dir + '/client/public'));
+
+  gulp.src('./client/index.html')
     .pipe(gulp.dest(dir + '/client'));
 }
 
