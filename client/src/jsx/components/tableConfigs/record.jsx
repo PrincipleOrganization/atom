@@ -4,9 +4,24 @@ class TableConfigRecord extends React.Component {
   render() {
     const { data, onClick } = this.props;
 
+    let use = '';
+    if (data.use) {
+      use = <i class="fa fa-check" aria-hidden="true"></i>;
+    }
+
+    let socketsUse = '';
+    if (data.sockets.use) {
+      socketsUse = <i class="fa fa-check" aria-hidden="true"></i>;
+    }
+
+    let intervalCommandsUse = '';
+    if (data.intervalCommands.use) {
+      intervalCommandsUse = <i class="fa fa-check" aria-hidden="true"></i>;
+    }
+
     return (
       <tr onClick={onClick.bind(null, data)}>
-        <td>{data.use}</td>
+        <td>{use}</td>
         <td>{data.name}</td>
         <td>{data.port.prod}</td>
         <td>{data.db.vendor}</td>
@@ -14,9 +29,9 @@ class TableConfigRecord extends React.Component {
         <td>{data.db.port}</td>
         <td>{data.db.base.prod}</td>
         <td>{data.db.maxCount}</td>
-        <td>{data.sockets.use}</td>
+        <td>{socketsUse}</td>
         <td>{data.sockets.port}</td>
-        <td>{data.intervalCommands.use}</td>
+        <td>{intervalCommandsUse}</td>
         <td>{data.intervalCommands.interval}</td>
       </tr>
     );

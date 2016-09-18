@@ -4,9 +4,14 @@ class TableDeviceRecord extends React.Component {
   render() {
     const { data, onClick } = this.props;
 
+    let use = '';
+    if (data.use) {
+      use = <i class="fa fa-check" aria-hidden="true"></i>;
+    }
+
     return (
       <tr onClick={onClick.bind(null, data)}>
-        <td>{data.use}</td>
+        <td>{use}</td>
         <td>{data.name}</td>
         <td>{data.path}</td>
         <td>{data.tableName}</td>

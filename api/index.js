@@ -49,10 +49,28 @@ router.get('/settings/config', function(req, res) {
   });
 });
 
+router.get('/settings/config/use', function(req, res) {
+  configurator.getUsedConfiguration(function(error, data) {
+    var response = new Response((error) ? error : data);
+    response.send(res);
+  });
+});
+
 router.post('/settings/config', function(req, res) {
   if (req.body) {
     configurator.addNewConfig(req.body, function() {
-      var response = new Response('New config was added');
+      var response = new Response(`New config ${req.body.name} was added`);
+      response.send(res);
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.put('/settings/config', function(req, res) {
+  if (req.body) {
+    configurator.updateConfig(req.body, function() {
+      var response = new Response(`Configuration ${req.body.name} was updated`);
       response.send(res);
     });
   } else {
@@ -64,10 +82,10 @@ router.delete('/settings/config', function(req, res) {
   if (req.query.id) {
     configurator.deleteConfig(req.query.id, function(err) {
       if (err) {
-        var response = new Response('Failed to delete config.');
+        var response = new Response('Failed to delete config');
         response.send(res);
       } else {
-        var response = new Response('Config was deleted.');
+        var response = new Response(`Config was deleted`);
         response.send(res);
       }
     });
@@ -86,7 +104,18 @@ router.get('/settings/device', function(req, res) {
 router.post('/settings/device', function(req, res) {
   if (req.body) {
     configurator.addNewDevice(req.body, function() {
-      var response = new Response('New device was added');
+      var response = new Response(`New device ${req.body.name} was added`);
+      response.send(res);
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.put('/settings/device', function(req, res) {
+  if (req.body) {
+    configurator.updateDevice(req.body, function() {
+      var response = new Response(`Device ${req.body.name} was updated`);
       response.send(res);
     });
   } else {
@@ -98,10 +127,10 @@ router.delete('/settings/device', function(req, res) {
   if (req.query.id) {
     configurator.deleteDevice(req.query.id, function(err) {
       if (err) {
-        var response = new Response('Failed to delete device.');
+        var response = new Response('Failed to delete device');
         response.send(res);
       } else {
-        var response = new Response('Device was deleted.');
+        var response = new Response(`Device was deleted`);
         response.send(res);
       }
     });
@@ -120,7 +149,18 @@ router.get('/settings/plugin', function(req, res) {
 router.post('/settings/plugin', function(req, res) {
   if (req.body) {
     configurator.addNewPlugin(req.body, function() {
-      var response = new Response('New plugin was added');
+      var response = new Response(`New plugin ${req.body.vendor}-${req.body.model}-${req.body.tableName} was added`);
+      response.send(res);
+    });
+  } else {
+    sendInvalidIncomData(res);
+  }
+});
+
+router.put('/settings/plugin', function(req, res) {
+  if (req.body) {
+    configurator.updatePlugin(req.body, function() {
+      var response = new Response(`Plugin ${req.body.vendor}-${req.body.model}-${req.body.tableName} was updated`);
       response.send(res);
     });
   } else {
@@ -132,10 +172,10 @@ router.delete('/settings/plugin', function(req, res) {
   if (req.query.id) {
     configurator.deletePlugin(req.query.id, function(err) {
       if (err) {
-        var response = new Response('Failed to delete device.');
+        var response = new Response(`Failed to delete plugin`);
         response.send(res);
       } else {
-        var response = new Response('Plugin was deleted.');
+        var response = new Response(`Plugin was deleted`);
         response.send(res);
       }
     });
@@ -313,7 +353,7 @@ router.get('/sensor', function(req, res) {
   }
 });
 
-router.get('/weight/clear', function(req, res) {
+router.get('/sensor/clear', function(req, res) {
   var comName = (req.query.port) ? req.query.port : null;
   var date = parser.parseDate(req.query);
 

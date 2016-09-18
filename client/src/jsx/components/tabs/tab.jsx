@@ -3,9 +3,9 @@ import React from 'react';
 class Tab extends React.Component {
   getLiClass() {
     if (this.props.active) {
-      return "active";
+      return `active`;
     } else {
-      return "";
+      return ``;
     }
   }
 

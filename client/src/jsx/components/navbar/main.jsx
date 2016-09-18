@@ -47,7 +47,10 @@ class Navbar extends React.Component {
               <p class="navbar-text">Version: {data.atom.version}; Product: {data.product}; Configuration: {data.configuration}</p>
             </div>
             <div class="pull-right">
-              <button class="btn btn-primary" id="btn-restart-server" onClick={this.restartApplication.bind(this)}>Restart</button>
+              <button class="btn btn-success" id="btn-restart-server" onClick={this.restartApplication.bind(this)}>
+                <i class="fa fa-refresh icon" aria-hidden="true"></i>
+                Restart device
+              </button>
             </div>
           </div>
         </nav>

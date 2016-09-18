@@ -1,3 +1,7 @@
+#app {
+  margin-bottom: 10px;
+}
+
 #tabs {
   margin-left: 10px;
   margin-right: 10px;
@@ -51,4 +55,47 @@ textarea {
 
 .notification-bar-message {
   font-size: 14px;
+}
+
+.icon {
+  padding-right: 10px;
+}
+
+.dashboard-units {
+  padding: 0 10px;
+}
+
+.dashboard-unit {
+  padding-top: 10px;
+  margin-bottom: 15px;
+}
+
+.dashboard-unit-header {
+  padding-bottom: 10px;
+}
+
+.device-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.device-path {
+  font-size: 12px;
+}
+
+.special-header {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.device-current-value {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn-width {
+  margin-top: 14px;
+  width: 100%;
+  max-width: 100px;
+  min-width: 65px;
 }

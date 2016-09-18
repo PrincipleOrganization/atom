@@ -28,9 +28,13 @@ class Button extends React.Component {
     const cssClass = `btn ${this.props.cssClass}`;
 
     return (
-      <button id={this.props.id} class={cssClass} onClick={this.handleOnClick.bind(this)}>
-        {this.props.text}
+      <button
+        type="button"
+        id={this.props.id}
+        class={cssClass}
+        onClick={this.handleOnClick.bind(this)}>
         {this.props.children}
+        {this.props.text}
       </button>
     );
   }

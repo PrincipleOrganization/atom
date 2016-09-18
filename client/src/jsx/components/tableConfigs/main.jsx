@@ -34,6 +34,12 @@ class TableConfigs extends React.Component {
     });
   }
 
+  afterAPICall(response) {
+    this.getAllRecords();
+    this.toogleModalDialog();
+    this.props.addNotification(response.data.data);
+  }
+
   toogleModalDialog() {
     this.setState({...this.state, modalIsOpen: !this.state.modalIsOpen});
   }
@@ -49,37 +55,44 @@ class TableConfigs extends React.Component {
   handleSaveModalDialog() {
     const formState = this.refs['form'];
 
-    const newRecord = {
+    const record = {
       name: formState.name,
       port: {
-        prod: formState.port.prod
+        prod: formState.portProd
       },
       db: {
-        vendor: formState.db.vendor,
-        host: formState.db.host,
-        port: formState.db.port,
+        vendor: formState.dbVendor,
+        host: formState.dbHost,
+        port: formState.dbPort,
         base: {
-          prod: formState.db.base.prod
+          prod: formState.dbBaseProd
         },
-        maxCount: formState.db.maxCount,
+        maxCount: formState.dbMaxCount,
       },
       sockets: {
-        use: (formState.sockets.use) ? ('1') : ('0'),
-        port: formState.sockets.port
+        use: (formState.socketsUse) ? ('1') : ('0'),
+        port: formState.socketsPort
       },
       intervalCommands: {
-        use: (formState.intervalCommands.use) ? ('1') : ('0'),
-        interval: formState.intervalCommands.interval
+        use: (formState.intervalCommandsUse) ? ('1') : ('0'),
+        interval: formState.intervalCommandsInterval
       },
       use: (formState.use) ? (1) : (0)
     };
 
-    axios.post(`${this.href}api/settings/config`, newRecord)
-     .then((response) => {
-       this.getAllRecords();
-       this.toogleModalDialog();
-       this.props.addNotification(`New configuration ${formState.name} was added.`);
-     });
+    const { modalAction } = this.state;
+    if (modalAction == 'edit') {
+      record.id = formState.id;
+      axios.put(`${this.href}api/settings/config`, record)
+       .then((response) => {
+         this.afterAPICall(response);
+       });
+    } else if (modalAction == 'add') {
+      axios.post(`${this.href}api/settings/config`, record)
+       .then((response) => {
+         this.afterAPICall(response);
+       });
+    }
   }
 
   handleDeleteModalDialog() {

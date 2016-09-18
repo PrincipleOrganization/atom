@@ -6,7 +6,9 @@ class TablePluginRecord extends React.Component {
 
     return (
       <tr onClick={onClick.bind(null, data)}>
-        <td>{data.name}</td>
+        <td>{data.vendor}</td>
+        <td>{data.model}</td>
+        <td>{data.tableName}</td>
       </tr>
     );
   }

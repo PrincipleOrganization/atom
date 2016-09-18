@@ -40,6 +40,7 @@ class Tabs extends React.Component {
             return <Tab key={tab.id} name={tab.name} id={tab.id} active={tab.active} onClick={this.handleTabOnClick.bind(this)} />
           })}
         </ul>
+
         <div class="tab-content clearfix">
           {this.state.content.map((content) => {
             return <TabContent
@@ -59,9 +60,14 @@ class Tabs extends React.Component {
 const DEFAULT_STATE = {
   tabs: [
     {
+      name: 'Dashboard',
+      id: 'dashboard',
+      active: true
+    },
+    {
       name: 'Configurations',
       id: 'configs',
-      active: true
+      active: false
     },
     {
       name: 'Devices',
@@ -76,8 +82,12 @@ const DEFAULT_STATE = {
   ],
   content: [
     {
-      id: 'configs',
+      id: 'dashboard',
       active: true
+    },
+    {
+      id: 'configs',
+      active: false
     },
     {
       id: 'devices',

@@ -14,7 +14,6 @@ const pkg = require('./package.json');
 
 // *** SERVER ***//
 
-
 const cnf = {
   "port": {
     "dev": 4000,
@@ -23,7 +22,7 @@ const cnf = {
   "db": {
     "vendor": "flow",
     "host": "127.0.0.1",
-    "port": "30000",
+    "port": 30000,
     "base": {
       "dev": "test",
       "prod": "local"
@@ -177,18 +176,18 @@ function generateConfigDB(dir, productName) {
     db.run(`CREATE TABLE IF NOT EXISTS configs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT UNIQUE NOT NULL,
-      port_dev TEXT NOT NULL,
-      port_prod TEXT NOT NULL,
+      port_dev INTEGER NOT NULL,
+      port_prod INTEGER NOT NULL,
       db_vendor TEXT NOT NULL,
       db_host TEXT NOT NULL,
-      db_port TEXT NOT NULL,
+      db_port INTEGER NOT NULL,
       db_base_dev TEXT NOT NULL,
       db_base_prod TEXT NOT NULL,
-      db_maxcount TEXT NOT NULL,
-      socket_use TEXT NOT NULL,
-      socket_port TEXT NOT NULL,
-      intervalCommands_use TEXT NOT NULL,
-      intervalCommands_interval TEXT NOT NULL,
+      db_maxcount INTEGER NOT NULL,
+      socket_use INTEGER NOT NULL,
+      socket_port INTEGER NOT NULL,
+      intervalCommands_use INTEGER NOT NULL,
+      intervalCommands_interval INTEGER NOT NULL,
       use INTEGER NOT NULL DEFAULT 0,
       canBeDeleted INTEGER NOT NULL DEFAULT 1
     )`);
@@ -235,10 +234,36 @@ function generateConfigDB(dir, productName) {
       use INTEGER NOT NULL DEFAULT 1
     )`);
 
+    var dev = getTestDevice();
+    var _device = db.prepare('INSERT OR REPLACE INTO devices (name, path, tableName, vendor, model, units, baudRate, dataBits, stopBits, parity, rtscts, xon, xoff, xany, flowControl, bufferSize, use) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    _device.run(
+      dev.name,
+      dev.path,
+      dev.tableName,
+      dev.vendor,
+      dev.model,
+      dev.units,
+      dev.baudRate,
+      dev.dataBits,
+      dev.stopBits,
+      dev.parity,
+      dev.rtscts,
+      dev.xon,
+      dev.xoff,
+      dev.xany,
+      dev.flowControl,
+      dev.bufferSize,
+      dev.use
+    );
+    _device.finalize();
+
     // Plugins
     db.run(`CREATE TABLE IF NOT EXISTS plugins (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT UNIQUE NOT NULL,
+      tableName TEXT NOT NULL,
+      vendor TEXT NOT NULL,
+      model TEXT NOT NULL,
+      executeFunction TEXT NOT NULL,
       params TEXT NOT NULL
     )`);
 
@@ -321,6 +346,28 @@ function moveAll(dir) {
 
   gulp.src('./client/index.html')
     .pipe(gulp.dest(dir + '/client'));
+}
+
+var getTestDevice = function() {
+  return {
+    name: 'Test',
+    path: '/dev/ttyUSB0',
+    tableName: 'weight',
+    vendor: 'Test',
+    model: 'Test',
+    units: 'test',
+    baudRate: 9600,
+    dataBits: 8,
+    stopBits: 1,
+    parity: 'none',
+    rtscts: 0,
+    xon: 0,
+    xoff: 0,
+    xany: 0,
+    flowControl: 0,
+    bufferSize: 65536,
+    use: 1
+  }
 }
 
 function log(msg) {

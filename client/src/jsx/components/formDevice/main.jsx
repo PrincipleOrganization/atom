@@ -8,6 +8,7 @@ class FormDevice extends React.Component {
   static defaultProps = {
     operationId: null,
     recordData: {
+      id: '',
       name: '',
       path: '',
       tableName: '',
@@ -28,6 +29,7 @@ class FormDevice extends React.Component {
     }
   };
 
+  id;
   name;
   path;
   tableName;
@@ -44,7 +46,7 @@ class FormDevice extends React.Component {
   xany;
   flowControl;
   bufferSize;
-  use;
+  use = false;
 
   operationId;
 
@@ -52,93 +54,26 @@ class FormDevice extends React.Component {
     this.forceUpdate();
   }
 
-  handleCheckboxUseOnChange(event) {
-    this.use = !this.use;
-    this.updateForm();
-  }
-
-  handleNameOnChange(event) {
-    this.name = event.target.value;
-    this.updateForm();
-  }
-
-  handlePathOnChange(event) {
-    this.path = event.target.value;
-    this.updateForm();
-  }
-
-  handleTableOnChange(event) {
-    this.tableName = event.target.value;
-    this.updateForm();
-  }
-
-  handleVendorOnChange(event) {
-    this.vendor = event.target.value;
-    this.updateForm();
-  }
-
-  handleModelOnChange(event) {
-    this.model = event.target.value;
-    this.updateForm();
-  }
-
-  handleUnitsOnChange(event) {
-    this.units = event.target.value;
-    this.updateForm();
-  }
-
-  handleBaudRateOnChange(event) {
-    this.baudRate = event.target.value;
-    this.updateForm();
-  }
-
-  handleDataBitsOnChange(event) {
-    this.dataBits = event.target.value;
-    this.updateForm();
-  }
-
-  handleStopBitsOnChange(event) {
-    this.stopBits = event.target.value;
-    this.updateForm();
-  }
-
-  handleParityOnChange(event) {
-    this.parity = event.target.value;
-    this.updateForm();
-  }
-
-  handleRTSCTSOnChange(event) {
-    this.rtscts = event.target.value;
-    this.updateForm();
-  }
-
-  handleXONOnChange(event) {
-    this.xon = event.target.value;
-    this.updateForm();
-  }
-
-  handleXOFFOnChange(event) {
-    this.xoff = event.target.value;
-    this.updateForm();
-  }
-
-  handleXANYOnChange(event) {
-    this.xany = event.target.value;
-    this.updateForm();
-  }
-
-  handleFlowControlOnChange(event) {
-    this.flowControl = event.target.value;
-    this.updateForm();
-  }
-
-  handleBufferSizeOnChange(event) {
-    this.bufferSize = event.target.value;
+  handleInputOnChange(event) {
+    if (event.target.id == 'use') {
+      this.use = !this.use;
+    } else if (event.target.id == 'bufferSize') {
+      let value = event.target.value;
+      if (value > 65536) {
+        value = 65536;
+      } else if (value < 1) {
+        value = 1;
+      }
+      this.bufferSize = value;
+    } else {
+      this[event.target.id] = event.target.value;
+    }
     this.updateForm();
   }
 
   render() {
     if (this.operationId != this.props.operationId) { // if 'true' then init 'this'
+      this.id = "";
       this.name = "";
       this.path = "";
       this.tableName = "";
@@ -155,27 +90,27 @@ class FormDevice extends React.Component {
       this.xany = "0";
       this.flowControl = "0";
       this.bufferSize = "65536";
-      this.use = "";
+      this.use = false;
 
       Object.assign(this, this.props.recordData);
       this.operationId = this.props.operationId;
     }
 
-    const { name, path, tableName, vendor, model, units, baudRate, dataBits, stopBits, parity, rtscts, xon, xoff, xany, flowControl, bufferSize, use, operationId } = this;
+    const { id, name, path, tableName, vendor, model, units, baudRate, dataBits, stopBits, parity, rtscts, xon, xoff, xany, flowControl, bufferSize, use, operationId } = this;
 
     return (
       <form class="form-horizontal">
 
         <div class="form-group">
 
-          <label class="col-sm-1 control-label" for="input_name">Name</label>
+          <label class="col-sm-1 control-label" for="name">Name</label>
 
           <div class="col-sm-11">
             <div class="input-group">
               <span class="input-group-addon">
-                <input type="checkbox" aria-label="name" id="input_use" checked={!!use} onChange={this.handleCheckboxUseOnChange.bind(this)} />
+                <input type="checkbox" aria-label="name" id="use" checked={!!use} onChange={this.handleInputOnChange.bind(this)} />
               </span>
-              <input type="text" class="form-control" aria-label="name" id="input_name" value={name} onChange={this.handleNameOnChange.bind(this)} />
+              <input type="text" class="form-control" aria-label="name" id="name" value={name} onChange={this.handleInputOnChange.bind(this)} />
             </div>
           </div>
 
@@ -183,42 +118,45 @@ class FormDevice extends React.Component {
 
         <div class="form-group">
 
-          <label class="col-sm-1 control-label" for="input_host">Path</label>
+          <label class="col-sm-1 control-label" for="path">Path</label>
 
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="input_path" value={path} onChange={this.handlePathOnChange.bind(this)} />
+            <input type="text" class="form-control" id="path" value={path} onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
-          <label class="col-sm-1 control-label" for="input_table">Table</label>
+          <label class="col-sm-1 control-label" for="tableName">Table</label>
 
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="input_table" value={tableName} onChange={this.handleTableOnChange.bind(this)} />
-          </div>
-
-        </div>
-
-        <div class="form-group">
-
-          <label class="col-sm-1 control-label" for="input_vendor">Vendor</label>
-
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="input_vendor" value={vendor} onChange={this.handleVendorOnChange.bind(this)} />
-          </div>
-
-          <label class="col-sm-1 control-label" for="input_model">Model</label>
-
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="input_model" value={model} onChange={this.handleModelOnChange.bind(this)} />
+            <select id="tableName" value={tableName} onChange={this.handleInputOnChange.bind(this)} class="form-control">
+              <option value='weight'>Weight</option>
+              <option value='sensor'>Sensor</option>
+            </select>
           </div>
 
         </div>
 
         <div class="form-group">
 
-          <label class="col-sm-1 control-label" for="input_units">Units</label>
+          <label class="col-sm-1 control-label" for="vendor">Vendor</label>
+
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="vendor" value={vendor} onChange={this.handleInputOnChange.bind(this)} />
+          </div>
+
+          <label class="col-sm-1 control-label" for="model">Model</label>
+
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="model" value={model} onChange={this.handleInputOnChange.bind(this)} />
+          </div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label class="col-sm-1 control-label" for="units">Units</label>
 
           <div class="col-sm-2">
-            <input type="text" class="form-control" id="input_units" value={units} onChange={this.handleUnitsOnChange.bind(this)} />
+            <input type="text" class="form-control" id="units" value={units} onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
         </div>
@@ -227,68 +165,107 @@ class FormDevice extends React.Component {
 
         <div class="form-group">
 
-          <label class="col-sm-1 control-label" for="input_baud_rate">Baud rate</label>
+          <label class="col-sm-1 control-label" for="baudRate">Baud rate</label>
 
           <div class="col-sm-2">
-            <input type="text" class="form-control" id="input_baud_rate" value={baudRate} onChange={this.handleBaudRateOnChange.bind(this)} />
+            <select class="form-control" id="baudRate" value={baudRate} onChange={this.handleInputOnChange.bind(this)}>
+              <option value="115200">115200</option>
+              <option value="57600">57600</option>
+              <option value="38400">38400</option>
+              <option value="19200">19200</option>
+              <option value="14400">14400</option>
+              <option value="9600">9600</option>
+              <option value="4800">4800</option>
+              <option value="2400">2400</option>
+              <option value="1200">1200</option>
+              <option value="300">300</option>
+              <option value="110">110</option>
+            </select>
           </div>
 
-          <label class="col-sm-1 control-label" for="input_data_bits">Data bits</label>
-
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_data_bits" value={dataBits} onChange={this.handleDataBitsOnChange.bind(this)} />
-          </div>
-
-          <label class="col-sm-1 control-label" for="input_stop_bits">Stop bits</label>
-
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_stop_bits" value={stopBits} onChange={this.handleStopBitsOnChange.bind(this)} />
-          </div>
-
-          <label class="col-sm-1 control-label" for="input_parity">Parity</label>
+          <label class="col-sm-1 control-label" for="dataBits">Data bits</label>
 
           <div class="col-sm-2">
-            <input type="text" class="form-control" id="input_parity" value={parity} onChange={this.handleParityOnChange.bind(this)} />
+            <select class="form-control" id="dataBits" value={dataBits} onChange={this.handleInputOnChange.bind(this)}>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+            </select>
           </div>
 
-          <label class="col-sm-1 control-label" for="input_rtscts">RSTSCTS</label>
+          <label class="col-sm-1 control-label" for="stopBits">Stop bits</label>
 
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_rtscts" value={rtscts} onChange={this.handleRTSCTSOnChange.bind(this)} />
+          <div class="col-sm-2">
+            <select class="form-control" id="stopBits" value={stopBits} onChange={this.handleInputOnChange.bind(this)}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
           </div>
+
+          <label class="col-sm-1 control-label" for="parity">Parity</label>
+
+          <div class="col-sm-2">
+            <select class="form-control" id="parity" value={parity} onChange={this.handleInputOnChange.bind(this)}>
+              <option value="none">none</option>
+              <option value="even">even</option>
+              <option value="mark">mark</option>
+              <option value="odd">odd</option>
+              <option value="space">space</option>
+            </select>
+          </div>
+
 
         </div>
 
         <div class="form-group">
 
-          <label class="col-sm-1 control-label" for="input_buffer_size">Buffer size</label>
+          <label class="col-sm-1 control-label" for="flowControl">Flow control</label>
+
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="flowControl" value={flowControl} onChange={this.handleInputOnChange.bind(this)} />
+          </div>
+
+          <label class="col-sm-1 control-label" for="rtscts">RSTSCTS</label>
 
           <div class="col-sm-2">
-            <input type="text" class="form-control" id="inpup_buffer_size" value={bufferSize} onChange={this.handleBufferSizeOnChange.bind(this)} />
+            <input type="number" class="form-control" id="rtscts" value={rtscts} onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
-          <label class="col-sm-1 control-label" for="input_xon">XON</label>
+        </div>
 
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_xon" value={xon} onChange={this.handleXONOnChange.bind(this)} />
+
+        <div class="form-group">
+
+          <label class="col-sm-1 control-label" for="xon">XON</label>
+
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="xon" value={xon} onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
-          <label class="col-sm-1 control-label" for="input_xoff">XOFF</label>
+          <label class="col-sm-1 control-label" for="xoff">XOFF</label>
 
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_xoff" value={xoff} onChange={this.handleXOFFOnChange.bind(this)} />
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="xoff" value={xoff} onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
-          <label class="col-sm-1 control-label" for="input_xany">XANY</label>
+          <label class="col-sm-1 control-label" for="xany">XANY</label>
 
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_xany" value={xany} onChange={this.handleXANYOnChange.bind(this)} />
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="xany" value={xany} onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
-          <label class="col-sm-2 control-label" for="input_flow_control">Flow control</label>
+        </div>
 
-          <div class="col-sm-1">
-            <input type="text" class="form-control" id="input_flow_control" value={flowControl} onChange={this.handleFlowControlOnChange.bind(this)} />
+        <div class='form-group'>
+
+          <label class="col-sm-1 control-label" for="bufferSize">Buffer size</label>
+
+          <div class="col-sm-2">
+            <input type="number" class="form-control" id="bufferSize"
+              max="65536"
+              min="1"
+              value={bufferSize}  onChange={this.handleInputOnChange.bind(this)} />
           </div>
 
         </div>

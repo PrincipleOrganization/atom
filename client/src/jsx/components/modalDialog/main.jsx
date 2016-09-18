@@ -54,15 +54,24 @@ class ModalWindow extends React.Component {
 
     let modalFooter = (
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onClick={handleSave}>Save & close</button>
+        <button type="button" class="btn btn-primary" onClick={handleSave}>
+          <i class="fa fa-floppy-o icon" aria-hidden="true"></i>
+          Save & close
+        </button>
         <button type="button" class="btn btn-default" onClick={handleClose}>Close</button>
       </div>
     );
     if (action == 'edit') {
       modalFooter = (
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger pull-left" onClick={handleDelete}>Delete</button>
-          <button type="button" class="btn btn-primary" onClick={handleSave}>Save & close</button>
+          <button type="button" class="btn btn-danger pull-left" onClick={handleDelete}>
+            <i class="fa fa-trash icon" aria-hidden="true"></i>
+            Delete
+          </button>
+          <button type="button" class="btn btn-primary" onClick={handleSave}>
+            <i class="fa fa-floppy-o icon" aria-hidden="true"></i>
+            Save & close
+          </button>
           <button type="button" class="btn btn-default" onClick={handleClose}>Close</button>
         </div>
       );

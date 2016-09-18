@@ -33,6 +33,12 @@ class TablePlugins extends React.Component {
       this.setState({data: data});
     });
   }
+  
+  afterAPICall(response) {
+    this.getAllRecords();
+    this.toogleModalDialog();
+    this.props.addNotification(response.data.data);
+  }
 
   toogleModalDialog() {
     this.setState({...this.state, modalIsOpen: !this.state.modalIsOpen});
@@ -49,28 +55,36 @@ class TablePlugins extends React.Component {
   handleSaveModalDialog() {
     const formState = this.refs['form'];
 
-    const newRecord = {
-      name: formState.name,
+    const record = {
+      tableName: formState.tableName,
+      vendor: formState.vendor,
+      model: formState.model,
+      executeFunction: formState.executeFunction,
       params: formState.params
     };
 
-    axios.post(`${this.href}api/settings/plugin`, newRecord)
-     .then((response) => {
-       this.getAllRecords();
-       this.toogleModalDialog();
-       this.props.addNotification(`New plugin ${formState.name} was added.`);
-     });
+    if (this.state.modalAction == 'edit') {
+      record.id = formState.id;
+      axios.put(`${this.href}api/settings/plugin`, record)
+        .then((response) => {
+          this.afterAPICall(response);
+        });
+    } else if (this.state.modalAction == 'add') {
+      axios.post(`${this.href}api/settings/plugin`, record)
+        .then((response) => {
+          this.afterAPICall(response);
+        });
+    }
   }
+
 
   handleDeleteModalDialog() {
     const { name, id } = this.refs.form;
 
     axios.delete(`${this.href}api/settings/plugin`, {params: {id}})
-     .then((response) => {
-       this.getAllRecords();
-       this.toogleModalDialog();
-       this.props.addNotification(`Plugin ${name} was deleted.`);
-     });
+      .then((response) => {
+        this.afterAPICall(response);
+      });
   }
 
   addNewRecord(button) {
@@ -105,7 +119,9 @@ class TablePlugins extends React.Component {
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Vendor</th>
+              <th>Model</th>
+              <th>Table</th>
             </tr>
           </thead>
           <tbody>

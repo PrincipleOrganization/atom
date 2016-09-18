@@ -34,6 +34,12 @@ class TableDevices extends React.Component {
     });
   }
 
+  afterAPICall(response) {
+    this.getAllRecords();
+    this.toogleModalDialog();
+    this.props.addNotification(response.data.data);
+  }
+
   toogleModalDialog() {
     this.setState({...this.state, modalIsOpen: !this.state.modalIsOpen});
   }
@@ -49,7 +55,7 @@ class TableDevices extends React.Component {
   handleSaveModalDialog() {
     const formState = this.refs['form'];
 
-    const newRecord = {
+    const record = {
       name: formState.name,
       path: formState.path,
       tableName: formState.tableName,
@@ -69,23 +75,28 @@ class TableDevices extends React.Component {
       use: formState.use
     };
 
-    axios.post(`${this.href}api/settings/device`, newRecord)
-     .then((response) => {
-       this.getAllRecords();
-       this.toogleModalDialog();
-       this.props.addNotification(`New device ${formState.name} was added.`);
-     });
+    const { modalAction } = this.state;
+    if (modalAction == 'edit') {
+      record.id = formState.id;
+      axios.put(`${this.href}api/settings/device`, record)
+        .then((response) => {
+          this.afterAPICall(response);
+        });
+    } else if (modalAction == 'add') {
+      axios.post(`${this.href}api/settings/device`, record)
+        .then((response) => {
+          this.afterAPICall(response);
+        });
+    }
   }
 
   handleDeleteModalDialog() {
     const { name, id } = this.refs.form;
 
     axios.delete(`${this.href}api/settings/device`, {params: {id}})
-     .then((response) => {
-       this.getAllRecords();
-       this.toogleModalDialog();
-       this.props.addNotification(`Device ${name} was deleted.`);
-     });
+      .then((response) => {
+        this.afterAPICall(response);
+      });
   }
 
   addNewRecord(button) {

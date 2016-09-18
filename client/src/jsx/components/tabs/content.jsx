@@ -3,6 +3,7 @@ import React from 'react';
 import TableConfigs from '../tableConfigs/main.jsx';
 import TableDevices from '../tableDevices/main.jsx';
 import TablePlugins from '../tablePlugins/main.jsx';
+import Dashboard    from '../dashboard/main.jsx';
 
 class TabContent extends React.Component {
   getDivClass() {
@@ -14,7 +15,9 @@ class TabContent extends React.Component {
 
   render() {
     let element = "test";
-    if (this.props.id == 'configs') {
+    if (this.props.id == 'dashboard') {
+      element = <Dashboard />
+    } else if (this.props.id == 'configs') {
       element = <TableConfigs
         addNotification={this.props.addNotification}
         removeNotification={this.props.removeNotification}

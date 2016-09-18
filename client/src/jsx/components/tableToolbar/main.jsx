@@ -27,7 +27,9 @@ class TableToolbar extends React.Component {
 
     return (
       <Toolbar>
-        <Button id={addBtnId} cssClass='btn-primary' text='Add' onClick={this.addNewRecord.bind(this)} />
+        <Button id={addBtnId} cssClass='btn-primary' text='Add' onClick={this.addNewRecord.bind(this)}>
+          <i class="fa fa-plus icon" aria-hidden="true"></i>
+        </Button>
       </Toolbar>
     );
   }
