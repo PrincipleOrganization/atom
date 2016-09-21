@@ -18,7 +18,7 @@ class FormPlugin extends React.Component {
   };
 
   id;
-  tableName;
+  tableName = 'weight';
   model;
   vendor;
   executeFunction;
@@ -38,7 +38,7 @@ class FormPlugin extends React.Component {
   render() {
     if (this.operationId != this.props.operationId) {
       this.id = '';
-      this.tableName = '';
+      this.tableName = 'weight';
       this.model = '';
       this.vendor = '';
       this.executeFunction = '';

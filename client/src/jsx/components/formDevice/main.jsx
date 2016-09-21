@@ -32,7 +32,7 @@ class FormDevice extends React.Component {
   id;
   name;
   path;
-  tableName;
+  tableName = 'weight';
   vendor;
   model;
   units;
@@ -76,7 +76,7 @@ class FormDevice extends React.Component {
       this.id = "";
       this.name = "";
       this.path = "";
-      this.tableName = "";
+      this.tableName = "weight";
       this.vendor = "";
       this.model = "";
       this.units = "";

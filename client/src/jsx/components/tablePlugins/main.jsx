@@ -33,7 +33,7 @@ class TablePlugins extends React.Component {
       this.setState({data: data});
     });
   }
-  
+
   afterAPICall(response) {
     this.getAllRecords();
     this.toogleModalDialog();

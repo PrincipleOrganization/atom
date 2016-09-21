@@ -28,9 +28,6 @@ export default class Dashboard extends React.Component {
             .then((response) => {
               const openedSerialPorts = response.data.data;
 
-              console.log(openedSerialPorts);
-
-
               this.setState({ ...this.state, serialPorts: openedSerialPorts });
 
               const serialPorts = this.state.serialPorts;
