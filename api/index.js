@@ -14,6 +14,13 @@ var Response = require('../lib/response');
 var OptionsCreator = require('../lib/options-creator');
 var AtomError = require('../lib/error');
 
+/*
+KERNEL begin
+*/
+var kernelLogger = require('../lib/kernel/logger');
+/*
+KERNEL end
+*/
 
 //////////////////
 /* API          */
@@ -261,6 +268,7 @@ router.get('/cmd', function(req, res) {
 router.get('/weight', function(req, res) {
   var date        = parser.parseDate(req.query);
   var reader      = (req.query.reader) ? req.query.reader : "";
+  var recType     = (req.query.recType) ? req.query.recType : "";
   var stableValue = (req.query.stable) ? (req.query.stable === 'true') : true;
   var stableUse   = (req.query.stable) ? true : false;
   var min         = (req.query.min) ? (req.query.min === 'true') : false;
@@ -282,6 +290,15 @@ router.get('/weight', function(req, res) {
           var response = new Response(data);
           response.send(res);
         }
+
+        /*
+        KERNEL begin
+        */
+        kernelLogger.writeClient(port, data.date, data.value, recType, reader);
+        /*
+        KERNEL end
+        */
+
       } else if (!data) {
         var response = new Response('Empty');
         response.send(res);
