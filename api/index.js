@@ -277,12 +277,24 @@ router.get('/weight', function(req, res) {
   var port = (req.query.port) ? req.query.port : ports.randomPort(true);
 
   if (port) {
-    handlerWeight.getLastWeight(port, date, stableUse, stableValue, reader, function(err, data) {
+    handlerWeight.getLastWeight(port, date, stableUse, stableValue, '', function(err, data) {
       if (err) {
         var response = new Response(new AtomError(5));
         response.send(res);
       }
       else if (data) {
+        /*
+        KERNEL begin
+        */
+        console.log(data);
+        console.log(recType && reader);
+        if (recType && reader) {
+          kernelLogger.writeClient(port, data.isodate, data.value, recType, reader);
+        }
+        /*
+        KERNEL end
+        */
+
         if (min) {
           var response = data.value;
           res.json(response);
@@ -291,13 +303,6 @@ router.get('/weight', function(req, res) {
           response.send(res);
         }
 
-        /*
-        KERNEL begin
-        */
-        kernelLogger.writeClient(port, data.date, data.value, recType, reader);
-        /*
-        KERNEL end
-        */
 
       } else if (!data) {
         var response = new Response('Empty');
