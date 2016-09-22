@@ -42,9 +42,9 @@ export default class Dashboard extends React.Component {
 
                     let socket = io(socketAddr);
                     socket.on(path, message => {
-                      if (message.stable == false) {
-                        return;
-                      }
+                      // if (message.stable == false) {
+                      //   return;
+                      // }
 
                       const newData = {
                         path,

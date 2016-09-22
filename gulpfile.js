@@ -405,7 +405,15 @@ gulp.task('html', function() {
 });
 
 gulp.task('js', function() {
-  return webpack(require('./webpack.config.js'));
+  var config = require('./webpack.config.js');
+  return webpack(config).run(function(err, stats) {
+    if(err) {
+      console.log('Error', err);
+    }
+    else {
+      console.log(stats.toString());
+    };
+  });
 });
 
 gulp.task('watch', function () {

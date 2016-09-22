@@ -263,6 +263,7 @@ router.get('/weight', function(req, res) {
   var reader      = (req.query.reader) ? req.query.reader : "";
   var stableValue = (req.query.stable) ? (req.query.stable === 'true') : true;
   var stableUse   = (req.query.stable) ? true : false;
+  var min         = (req.query.min) ? (req.query.min === 'true') : false;
 
   // TODO: var simple = (req.query.simple) ? req.query.simple : false;
   var port = (req.query.port) ? req.query.port : ports.randomPort(true);
@@ -274,8 +275,13 @@ router.get('/weight', function(req, res) {
         response.send(res);
       }
       else if (data) {
-        var response = new Response(data);
-        response.send(res);
+        if (min) {
+          var response = data.value;
+          res.json(response);
+        } else {
+          var response = new Response(data);
+          response.send(res);
+        }
       } else if (!data) {
         var response = new Response('Empty');
         response.send(res);
