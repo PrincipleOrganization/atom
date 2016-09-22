@@ -286,8 +286,6 @@ router.get('/weight', function(req, res) {
         /*
         KERNEL begin
         */
-        console.log(data);
-        console.log(recType && reader);
         if (recType && reader) {
           kernelLogger.writeClient(port, data.isodate, data.value, recType, reader);
         }
@@ -302,8 +300,6 @@ router.get('/weight', function(req, res) {
           var response = new Response(data);
           response.send(res);
         }
-
-
       } else if (!data) {
         var response = new Response('Empty');
         response.send(res);
