@@ -1,0 +1,24 @@
+Build on ARM
+
+Update README.md
+
+Some fields in store have wrong types.
+
+
+якщо немає плагіна, не запускається, і не повинно. НЕ створювати обєкт порту, якщо немає плагіна, або конфігу. lib/serial-port/index.js  openPortByName() (need to test)
+
+
+Try to move getPluginParams from store to configurator.
+Test new plugin system on real app.
+
+
+Tests for application.
+Tests for store.
+Tests for ports (open, close).
+Tests for handlers (weight) - give port & buffer - write to DB;
+
+
+move all api calls from 'configurator' to 'store' module.
+
+
+restarting socket server invokes an error (sometimes).

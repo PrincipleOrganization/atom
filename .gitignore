@@ -4,7 +4,7 @@
 /plugins
 /dist
 /_test
-/TODO
 /client/public
 /client/index.html
 /tmp
+npm-debug.log
